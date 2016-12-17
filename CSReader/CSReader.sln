@@ -1,0 +1,17 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSReader", "CSReader\CSReader.csproj", "{BA4ED006-BA01-4AA9-8994-2CE9ACB7ED4F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA4ED006-BA01-4AA9-8994-2CE9ACB7ED4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA4ED006-BA01-4AA9-8994-2CE9ACB7ED4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA4ED006-BA01-4AA9-8994-2CE9ACB7ED4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA4ED006-BA01-4AA9-8994-2CE9ACB7ED4F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
