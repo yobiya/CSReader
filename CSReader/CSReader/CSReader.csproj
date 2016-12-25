@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Command\AnalyzeCommand.cs" />
     <Compile Include="Command\CommandCreator.cs" />
+    <Compile Include="Command\HelpCommand.cs" />
     <Compile Include="Command\UnsupportedCommand.cs" />
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Program.cs" />

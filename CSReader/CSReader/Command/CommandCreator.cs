@@ -16,13 +16,16 @@ namespace CSReader.Command
 		{
 			if (args.Length == 0)
 			{
-				return null;
+				return new HelpCommand();
 			}
 
 			var commandName = args[0];
 			var commandArgs = args.Skip(1);
 			switch (commandName)
 			{
+			case HelpCommand.COMMAND_NAME:
+				return new HelpCommand();
+
 			case AnalyzeCommand.COMMAND_NAME:
 				return AnalyzeCommand.Create(commandArgs);
 			}
