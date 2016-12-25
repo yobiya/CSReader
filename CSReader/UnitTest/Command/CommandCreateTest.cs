@@ -24,14 +24,6 @@ namespace UnitTest.Command
         }
 
         [TestMethod]
-        public void AnalyzeCommandCreateTest()
-        {
-            var args = new string[] { "analyze" };
-            var command = CommandCreator.Create(args);
-            Assert.IsTrue(command is AnalyzeCommand);
-        }
-
-        [TestMethod]
         public void UnsupportedCommandCreateTest()
         {
             var args = new string[] { "unknown" };

@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\AnalyzeCommand.cs" />
+    <Compile Include="Command\AnalyzeHelpCommand.cs" />
     <Compile Include="Command\CommandCreator.cs" />
     <Compile Include="Command\HelpCommand.cs" />
     <Compile Include="Command\UnsupportedCommand.cs" />

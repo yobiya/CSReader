@@ -1,6 +1,4 @@
 ﻿using CSReader.Command;
-using System;
-using System.Linq;
 
 namespace CSReader
 {
@@ -8,11 +6,8 @@ namespace CSReader
     {
         static void Main(string[] args)
         {
-			if (args.Length == 0)
-			{
-                Console.WriteLine("Usage : csr help");
-				Environment.Exit(0);
-			}
+			var command = CommandCreator.Create(args);
+			command.Execute();
         }
     }
 }

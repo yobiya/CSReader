@@ -16,6 +16,7 @@ namespace CSReader.Command
 		{
 			if (args.Length == 0)
 			{
+				// 引数がなければ、ヘルプコマンドを返す
 				return new HelpCommand();
 			}
 

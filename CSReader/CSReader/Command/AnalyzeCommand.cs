@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace CSReader.Command
 {
@@ -9,8 +10,13 @@ namespace CSReader.Command
     {
 		public const string COMMAND_NAME = "analyze";
 
-		public AnalyzeCommand(IEnumerable<string> args)
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="args">コマンド引数</param>
+		private AnalyzeCommand(IEnumerable<string> args)
 		{
+			
 		}
 
         /// <summary>
@@ -22,6 +28,12 @@ namespace CSReader.Command
 
 		public static ICommand Create(IEnumerable<string> args)
 		{
+			if (args.Count() == 0)
+			{
+				// 引数がなければ、ヘルプコマンドを返す
+				return new AnalyzeHelpCommand();
+			}
+
 			return new AnalyzeCommand(args);
 		}
     }
