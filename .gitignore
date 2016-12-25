@@ -1,5 +1,8 @@
 *.userprefs
 *.user
 CSReader/.vs
+CSReader/packages
 CSReader/CSReader/bin
 CSReader/CSReader/obj
+CSReader/UnitTest/bin
+CSReader/UnitTest/obj

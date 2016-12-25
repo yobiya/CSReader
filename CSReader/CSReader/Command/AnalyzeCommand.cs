@@ -5,7 +5,7 @@ namespace CSReader.Command
     /// <summary>
     /// プロジェクトの解析を行うコマンド
     /// </summary>
-    class AnalyzeCommand : ICommand
+    public class AnalyzeCommand : ICommand
     {
 		public const string COMMAND_NAME = "analyze";
 

@@ -14,18 +14,5 @@ namespace CSReader
 				Environment.Exit(0);
 			}
         }
-
-		private static ICommand CreateCommand(string[] args)
-		{
-			var commandName = args[1];
-			var commandArgs = args.Skip(1);
-			switch (commandName)
-			{
-			case AnalyzeCommand.COMMAND_NAME:
-				return AnalyzeCommand.Create(commandArgs);
-			}
-
-			return new UnsupportedCommand(commandName);
-		}
     }
 }
