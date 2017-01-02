@@ -15,7 +15,7 @@ namespace UnitTest.Command
         }
 
         [TestMethod]
-        public void CreateEmptyArgsTest()
+        public void EmptyArgsCreateTest()
         {
             var args = new string[] { "analyze" };
             var command = CommandCreator.Create(args);
