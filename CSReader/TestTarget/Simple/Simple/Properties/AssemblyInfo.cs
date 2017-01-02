@@ -14,13 +14,13 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-// ComVisible を false に設定すると、このアセンブリ内の型は COM コンポーネントから
-// 参照できなくなります。COM からこのアセンブリ内の型にアクセスする必要がある場合は、
+// ComVisible を false に設定すると、その型はこのアセンブリ内で COM コンポーネントから 
+// 参照不可能になります。COM からこのアセンブリ内の型にアクセスする場合は、
 // その型の ComVisible 属性を true に設定してください。
 [assembly: ComVisible(false)]
 
 // このプロジェクトが COM に公開される場合、次の GUID が typelib の ID になります
-[assembly: Guid("d11f0376-726b-4d06-b784-6d12585af447")]
+[assembly: Guid("721525c2-3c02-461d-9fc9-29ba815705a3")]
 
 // アセンブリのバージョン情報は次の 4 つの値で構成されています:
 //
@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 //      ビルド番号
 //      Revision
 //
-// すべての値を指定するか、次を使用してビルド番号とリビジョン番号を既定に設定できます
+// すべての値を指定するか、下のように '*' を使ってビルドおよびリビジョン番号を 
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
