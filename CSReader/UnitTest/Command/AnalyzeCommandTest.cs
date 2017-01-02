@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace UnitTest.Command
 {
     [TestClass]
-    public class UnitTest1
+    public class AnalyzeCommandTest
     {
         [TestMethod]
         public void CreateTest()
