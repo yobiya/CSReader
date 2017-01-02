@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.CodeAnalysis.MSBuild;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CSReader.Command
@@ -10,20 +12,36 @@ namespace CSReader.Command
     {
 		public const string COMMAND_NAME = "analyze";
 
+		private readonly string _solutionPath;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        /// <param name="args">コマンド引数</param>
-		private AnalyzeCommand(IEnumerable<string> args)
+        /// <param name="solutionPath">解析するソリューションのパス</param>
+		private AnalyzeCommand(string solutionPath)
 		{
-			
+			_solutionPath = solutionPath;
 		}
 
         /// <summary>
         /// 解析を実行する
         /// </summary>
-		public void Execute()
+        /// <returns>コマンドの結果コード</returns>
+		public ResultCode Execute()
 		{
+			var workspace = MSBuildWorkspace.Create();
+
+			try
+			{
+				var solution = workspace.OpenSolutionAsync(_solutionPath).Result;
+			}
+			catch (Exception e)
+			{
+				Console.Error.WriteLine(e);
+				return ResultCode.Error;
+			}
+
+			return ResultCode.Sucess;
 		}
 
 		public static ICommand Create(IEnumerable<string> args)
@@ -34,7 +52,8 @@ namespace CSReader.Command
 				return new AnalyzeHelpCommand();
 			}
 
-			return new AnalyzeCommand(args);
+			var solutionPath = args.First();
+			return new AnalyzeCommand(solutionPath);
 		}
     }
 }

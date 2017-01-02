@@ -21,5 +21,14 @@ namespace UnitTest.Command
             var command = CommandCreator.Create(args);
             Assert.AreEqual(typeof(AnalyzeHelpCommand), command.GetType());
         }
+
+        [TestMethod]
+        public void SolutionNotFoundTest()
+		{
+            var args = new string[] { "analyze", "dummy.sln" };
+            var command = CommandCreator.Create(args);
+			var resultCode = command.Execute();
+			Assert.AreEqual(ResultCode.Error, resultCode);
+		}
     }
 }

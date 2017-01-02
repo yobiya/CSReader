@@ -19,9 +19,12 @@
         /// <summary>
         /// コマンドを実行する
         /// </summary>
-		public void Execute()
+        /// <returns>コマンドの結果コード</returns>
+		public ResultCode Execute()
 		{
 			System.Console.Error.WriteLine("'" + _commandName + "' is unknown command name.");
+
+			return ResultCode.Error;
 		}
     }
 }

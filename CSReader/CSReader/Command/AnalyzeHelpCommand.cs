@@ -8,9 +8,12 @@
         /// <summary>
         /// コマンドを実行する
         /// </summary>
-		public void Execute()
+        /// <returns>コマンドの結果コード</returns>
+		public ResultCode Execute()
 		{
 			System.Console.WriteLine("Usage: csr analyze [target solution file path]");
+
+			return ResultCode.Sucess;
 		}
     }
 }

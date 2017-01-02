@@ -8,6 +8,7 @@
         /// <summary>
         /// コマンドを実行する
         /// </summary>
-		void Execute();
+        /// <returns>コマンドの結果コード</returns>
+		ResultCode Execute();
     }
 }
