@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Analyze\AnalyzerTest.cs" />
     <Compile Include="Command\AnalyzeCommandTest.cs" />
     <Compile Include="Command\CommandCreateTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -59,6 +60,9 @@
       <Project>{a17c4b7a-fe04-436a-a82a-a2a8a02c75a8}</Project>
       <Name>CSReader</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

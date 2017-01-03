@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis.MSBuild;
+﻿using CSReader.Analyze;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,11 +29,11 @@ namespace CSReader.Command
         /// <returns>コマンドの結果コード</returns>
 		public ResultCode Execute()
 		{
-			var workspace = MSBuildWorkspace.Create();
 
 			try
 			{
-				var solution = workspace.OpenSolutionAsync(_solutionPath).Result;
+				var analyzer = new Analyzer(_solutionPath);
+				analyzer.Analyze();
 			}
 			catch (Exception e)
 			{
