@@ -1,5 +1,8 @@
-﻿using CSReader.Analyze;
-using CSReader.Command;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace CSReader
 {
@@ -7,11 +10,6 @@ namespace CSReader
     {
         static void Main(string[] args)
         {
-            var analyzer = new Analyzer(@"C:\Users\nanas\prj\tool\csr\CSReader\TestTarget\Simple\Simple.sln");
-            analyzer.Analyze();
-
-//            var command = CommandCreator.Create(args);
-//			command.Execute();
         }
     }
 }
