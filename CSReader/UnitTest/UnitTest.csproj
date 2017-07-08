@@ -157,6 +157,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyze\AnalyzerTest.cs" />
+    <Compile Include="Command\AnalyzeCommandTest.cs" />
+    <Compile Include="Command\CommandCreateTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

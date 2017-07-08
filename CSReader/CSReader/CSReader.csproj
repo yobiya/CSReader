@@ -150,6 +150,13 @@
   <ItemGroup>
     <Compile Include="Analyze\Analyzer.cs" />
     <Compile Include="Analyze\SyntaxWalker.cs" />
+    <Compile Include="Command\AnalyzeCommand.cs" />
+    <Compile Include="Command\AnalyzeHelpCommand.cs" />
+    <Compile Include="Command\CommandCreator.cs" />
+    <Compile Include="Command\HelpCommand.cs" />
+    <Compile Include="Command\ICommand.cs" />
+    <Compile Include="Command\ResultCode.cs" />
+    <Compile Include="Command\UnsupportedCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
