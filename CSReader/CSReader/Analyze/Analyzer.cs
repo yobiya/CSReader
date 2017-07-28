@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using System.Linq;
+using CSReader.DB;
 
 namespace CSReader.Analyze
 {
@@ -10,14 +11,17 @@ namespace CSReader.Analyze
     public class Analyzer
     {
         private readonly string _solutionPath;
+        private readonly DataBase _dataBase;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="solutionPath">ソリューションのパス</param>
-        public Analyzer(string solutionPath)
+        /// <param name="dataBase">接続済みのデータベース</param>
+        public Analyzer(string solutionPath, DataBase dataBase)
         {
             _solutionPath = solutionPath;
+            _dataBase = dataBase;
         }
 
         /// <summary>

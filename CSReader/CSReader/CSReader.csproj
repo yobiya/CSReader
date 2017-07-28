@@ -162,6 +162,7 @@
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Command\ResultCode.cs" />
     <Compile Include="Command\UnsupportedCommand.cs" />
+    <Compile Include="DB\DataBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
