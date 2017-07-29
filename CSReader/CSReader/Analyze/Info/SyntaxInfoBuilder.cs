@@ -1,6 +1,6 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
-using CSReader.DB;
+﻿using CSReader.DB;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CSReader.Analyze.Info
 {
@@ -17,22 +17,15 @@ namespace CSReader.Analyze.Info
             _dataBase = dataBase;
         }
 
-        public void BuildTypeInfo()
+        public void BuildTypeInfos()
         {
             foreach (var syntax in _syntaxWalker.ClassDeclarationSyntaxList)
             {
-                var info
-                    = new TypeInfo
-                        {
-                            UniqueId = GetUniqueId(),
-                            Name = syntax.Identifier.Text
-                        };
-
-                _dataBase.InsertInfo(info);
+                BuildTypeInfo(syntax);
             }
         }
 
-        public void BuildMethodInfo()
+        public void BuildMethodInfos()
         {
             foreach (var syntax in _syntaxWalker.MethodDeclarationSyntaxList)
             {
@@ -40,7 +33,8 @@ namespace CSReader.Analyze.Info
                     = new MethodInfo
                         {
                             UniqueId = GetUniqueId(),
-                            Name = syntax.Identifier.Text
+                            Name = syntax.Identifier.Text,
+                            ParentTypeId = BuildTypeInfo(syntax.Parent).UniqueId
                         };
 
                 _dataBase.InsertInfo(info);
@@ -51,6 +45,35 @@ namespace CSReader.Analyze.Info
         {
             _uniqueId++;
             return _uniqueId;
+        }
+
+        /// <summary>
+        /// クラス、構造体などの型情報を構築して保存する
+        /// </summary>
+        /// <param name="syntax">構文</param>
+        /// <returns>型情報</returns>
+        private TypeInfo BuildTypeInfo(SyntaxNode syntax)
+        {
+            var classSyntax = syntax as ClassDeclarationSyntax;
+
+            string name = classSyntax.Identifier.Text;
+            var typeInfo = _dataBase.SelectTypeInfo(name);
+            if (typeInfo != null)
+            {
+                // 既に保存されているので、そのまま値を返す
+                return typeInfo;
+            }
+
+            var info
+                = new TypeInfo
+                    {
+                        UniqueId = GetUniqueId(),
+                        Name = name
+                    };
+
+            _dataBase.InsertInfo(info);
+
+            return info;
         }
     }
 }

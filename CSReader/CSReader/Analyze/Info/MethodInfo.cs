@@ -10,5 +10,8 @@ namespace CSReader.Analyze.Info
 
         [Column(Name="name", DbType="NVARCHAR", CanBeNull=false)]
         public string Name;
+
+        [Column(Name="parent_type_id", DbType="INT")]
+        public int ParentTypeId;
     }
 }

@@ -60,6 +60,10 @@ namespace CSReader.DB
             Disconnect();
         }
 
+        /// <summary>
+        /// 対応するテーブルに情報を挿入する
+        /// </summary>
+        /// <param name="info">情報</param>
         public void InsertInfo<T>(T info) where T : class
         {
             using (var context = new DataContext(_connection))
@@ -67,6 +71,15 @@ namespace CSReader.DB
                 var table = context.GetTable<T>();
                 table.InsertOnSubmit(info);
                 context.SubmitChanges();
+            }
+        }
+
+        public TypeInfo SelectTypeInfo(string name)
+        {
+            using (var context = new DataContext(_connection))
+            {
+                var table = context.GetTable<TypeInfo>();
+                return table.Where(i => i.Name == name).SingleOrDefault();
             }
         }
     }
