@@ -5,7 +5,7 @@
     /// </summary>
     public enum ResultCode
     {
-		Sucess = 0,
-		Error = 1
+        Sucess = 0,
+        Error = 1
     }
 }
