@@ -29,7 +29,7 @@ namespace CSReader.DB
         {
             string text = $"{attribute.Name} {attribute.DbType}";
 
-            if (attribute.CanBeNull)
+            if (!attribute.CanBeNull)
             {
                 text += " NOT NULL";
             }

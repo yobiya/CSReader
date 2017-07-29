@@ -33,10 +33,20 @@ namespace CSReader.DB
 
         private void SetUpTables()
         {
-            using (var createTableCommand = _connection.CreateCommand())
+            var tableColumnTypes
+                = new []
+                {
+                    typeof(MethodInfoTableColumn),
+                    typeof(TypeInfoTableColumn)
+                };
+
+            foreach (var type in tableColumnTypes)
             {
-                createTableCommand.CommandText = SQLCreator.CreateCreateTableSQL(typeof(MethodInfoTableColumn));
-                createTableCommand.ExecuteNonQuery();
+                using (var createTableCommand = _connection.CreateCommand())
+                {
+                    createTableCommand.CommandText = SQLCreator.CreateCreateTableSQL(type);
+                    createTableCommand.ExecuteNonQuery();
+                }
             }
         }
 
@@ -48,6 +58,16 @@ namespace CSReader.DB
         void IDisposable.Dispose()
         {
             Disconnect();
+        }
+
+        public void InsertTypeInfos(IEnumerable<TypeInfo> typeInfos)
+        {
+            using (var context = new DataContext(_connection))
+            {
+                var table = context.GetTable<TypeInfoTableColumn>();
+                table.InsertAllOnSubmit(typeInfos.Select(i => i.CreateTableColumn()));
+                context.SubmitChanges();
+            }
         }
 
         public void InsertMethodInfos(IEnumerable<MethodInfo> methodInfos)

@@ -177,7 +177,7 @@
   <ItemGroup>
     <Compile Include="Analyze\Analyzer.cs" />
     <Compile Include="Analyze\Info\MethodInfo.cs" />
-    <Compile Include="Analyze\Info\MethodInfoBuilder.cs" />
+    <Compile Include="Analyze\Info\SyntaxInfoBuilder.cs" />
     <Compile Include="Analyze\Info\TypeInfo.cs" />
     <Compile Include="Analyze\SyntaxWalker.cs" />
     <Compile Include="Command\AnalyzeCommand.cs" />

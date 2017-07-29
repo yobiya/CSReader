@@ -9,6 +9,7 @@ namespace CSReader.Analyze
     /// </summary>
     public class SyntaxWalker : CSharpSyntaxWalker
     {
+        public List<ClassDeclarationSyntax> ClassDeclarationSyntaxList { get; } = new List<ClassDeclarationSyntax>();
         public List<MethodDeclarationSyntax> MethodDeclarationSyntaxList { get; } = new List<MethodDeclarationSyntax>();
 
 /*        public virtual void DefaultVisit(SyntaxNode node);
@@ -47,7 +48,14 @@ namespace CSReader.Analyze
         public virtual void VisitCatchFilterClause(CatchFilterClauseSyntax node);
         public virtual void VisitCheckedExpression(CheckedExpressionSyntax node);
         public virtual void VisitCheckedStatement(CheckedStatementSyntax node);
-        public virtual void VisitClassDeclaration(ClassDeclarationSyntax node);
+*/
+        public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+        {
+            base.VisitClassDeclaration(node);
+
+            ClassDeclarationSyntaxList.Add(node);
+        }
+/*
         public virtual void VisitClassOrStructConstraint(ClassOrStructConstraintSyntax node);
         public virtual void VisitCompilationUnit(CompilationUnitSyntax node);
         public virtual void VisitConditionalAccessExpression(ConditionalAccessExpressionSyntax node);
