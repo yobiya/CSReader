@@ -176,7 +176,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyze\Analyzer.cs" />
+    <Compile Include="Analyze\Info\IInfo.cs" />
     <Compile Include="Analyze\Info\MethodInfo.cs" />
+    <Compile Include="Analyze\Info\NamespaceInfo.cs" />
     <Compile Include="Analyze\Info\SyntaxInfoBuilder.cs" />
     <Compile Include="Analyze\Info\TypeInfo.cs" />
     <Compile Include="Analyze\SyntaxWalker.cs" />
@@ -191,6 +193,9 @@
     <Compile Include="DB\DataBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reader\FindKey\IFindKey.cs" />
+    <Compile Include="Reader\FindKey\IdFindKey.cs" />
+    <Compile Include="Reader\FindKey\NameFindKey.cs" />
     <Compile Include="Reader\TypeReader.cs" />
   </ItemGroup>
   <ItemGroup>

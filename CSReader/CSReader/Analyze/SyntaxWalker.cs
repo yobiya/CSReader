@@ -9,6 +9,7 @@ namespace CSReader.Analyze
     /// </summary>
     public class SyntaxWalker : CSharpSyntaxWalker
     {
+        public List<NamespaceDeclarationSyntax> NamespaceDeclarationSyntaxList = new List<NamespaceDeclarationSyntax>();
         public List<ClassDeclarationSyntax> ClassDeclarationSyntaxList { get; } = new List<ClassDeclarationSyntax>();
         public List<MethodDeclarationSyntax> MethodDeclarationSyntaxList { get; } = new List<MethodDeclarationSyntax>();
 
@@ -142,7 +143,14 @@ namespace CSReader.Analyze
 /*        public virtual void VisitNameColon(NameColonSyntax node);
         public virtual void VisitNameEquals(NameEqualsSyntax node);
         public virtual void VisitNameMemberCref(NameMemberCrefSyntax node);
-        public virtual void VisitNamespaceDeclaration(NamespaceDeclarationSyntax node);
+*/
+        public override void VisitNamespaceDeclaration(NamespaceDeclarationSyntax node)
+        {
+            base.VisitNamespaceDeclaration(node);
+
+            NamespaceDeclarationSyntaxList.Add(node);
+        }
+/*
         public virtual void VisitNullableType(NullableTypeSyntax node);
         public virtual void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node);
         public virtual void VisitOmittedArraySizeExpression(OmittedArraySizeExpressionSyntax node);

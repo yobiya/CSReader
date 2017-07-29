@@ -15,7 +15,7 @@ namespace CSReader.DB
 
             command
                 += type
-                    .GetFields()
+                    .GetProperties()
                     .Select(t => (ColumnAttribute)t.GetCustomAttributes(typeof(ColumnAttribute), false).First())
                     .Select(CreateTableRowText)
                     .Aggregate((a, b) => $"{a}, {b}");

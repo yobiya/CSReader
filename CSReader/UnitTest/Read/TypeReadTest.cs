@@ -35,6 +35,7 @@ namespace UnitTest.Read
             var readInfo = reader.Read("Program");
 
             Assert.AreEqual("Program", readInfo.Name);
+            Assert.AreEqual("Simple", readInfo.NameSpace);
         }
     }
 }

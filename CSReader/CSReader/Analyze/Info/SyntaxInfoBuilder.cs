@@ -1,4 +1,5 @@
 ﻿using CSReader.DB;
+using CSReader.Reader.FindKey;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -17,6 +18,14 @@ namespace CSReader.Analyze.Info
             _dataBase = dataBase;
         }
 
+        public void BuildNamespaceInfos()
+        {
+            foreach (var syntax in _syntaxWalker.NamespaceDeclarationSyntaxList)
+            {
+                BuildNamespaceInfo(syntax);
+            }
+        }
+
         public void BuildTypeInfos()
         {
             foreach (var syntax in _syntaxWalker.ClassDeclarationSyntaxList)
@@ -32,9 +41,9 @@ namespace CSReader.Analyze.Info
                 var info
                     = new MethodInfo
                         {
-                            UniqueId = GetUniqueId(),
+                            Id = GetUniqueId(),
                             Name = syntax.Identifier.Text,
-                            ParentTypeId = BuildTypeInfo(syntax.Parent).UniqueId
+                            ParentTypeId = BuildTypeInfo(syntax.Parent).Id
                         };
 
                 _dataBase.InsertInfo(info);
@@ -48,6 +57,33 @@ namespace CSReader.Analyze.Info
         }
 
         /// <summary>
+        /// ネームスペースの情報を構築して保存する
+        /// </summary>
+        /// <param name="syntax">構文</param>
+        /// <returns>ネームスペースの情報</returns>
+        private NamespaceInfo BuildNamespaceInfo(NamespaceDeclarationSyntax syntax)
+        {
+            string name = ((IdentifierNameSyntax)syntax.Name).Identifier.ValueText;
+            var namespaceInfo = _dataBase.SelectInfo<NamespaceInfo>(new NameFindKey(name));
+            if (namespaceInfo != null)
+            {
+                // 既に保存されているので、そのまま値を返す
+                return namespaceInfo;
+            }
+
+            var info
+                = new NamespaceInfo
+                    {
+                        Id = GetUniqueId(),
+                        Name = name
+                    };
+
+            _dataBase.InsertInfo(info);
+
+            return info;
+        }
+
+        /// <summary>
         /// クラス、構造体などの型情報を構築して保存する
         /// </summary>
         /// <param name="syntax">構文</param>
@@ -57,7 +93,7 @@ namespace CSReader.Analyze.Info
             var classSyntax = syntax as ClassDeclarationSyntax;
 
             string name = classSyntax.Identifier.Text;
-            var typeInfo = _dataBase.SelectTypeInfo(name);
+            var typeInfo = _dataBase.SelectInfo<TypeInfo>(new NameFindKey(name));
             if (typeInfo != null)
             {
                 // 既に保存されているので、そのまま値を返す
@@ -67,8 +103,9 @@ namespace CSReader.Analyze.Info
             var info
                 = new TypeInfo
                     {
-                        UniqueId = GetUniqueId(),
-                        Name = name
+                        Id = GetUniqueId(),
+                        Name = name,
+                        NamespaceId = BuildNamespaceInfo(((NamespaceDeclarationSyntax)syntax.Parent)).Id
                     };
 
             _dataBase.InsertInfo(info);

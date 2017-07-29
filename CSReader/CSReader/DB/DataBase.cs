@@ -1,6 +1,6 @@
 ﻿using CSReader.Analyze.Info;
+using CSReader.Reader.FindKey;
 using System;
-using System.Collections.Generic;
 using System.Data.Linq;
 using System.Data.SQLite;
 using System.IO;
@@ -36,6 +36,7 @@ namespace CSReader.DB
             var tableTypes
                 = new []
                 {
+                    typeof(NamespaceInfo),
                     typeof(MethodInfo),
                     typeof(TypeInfo)
                 };
@@ -74,12 +75,12 @@ namespace CSReader.DB
             }
         }
 
-        public TypeInfo SelectTypeInfo(string name)
+        public T SelectInfo<T>(IFindKey key) where T : class, IInfo
         {
             using (var context = new DataContext(_connection))
             {
-                var table = context.GetTable<TypeInfo>();
-                return table.Where(i => i.Name == name).SingleOrDefault();
+                var table = context.GetTable<T>();
+                return table.Where(key.Match).SingleOrDefault();
             }
         }
     }

@@ -3,12 +3,15 @@
 namespace CSReader.Analyze.Info
 {
     [Table(Name="type_info")]
-    public class TypeInfo
+    public class TypeInfo : IInfo
     {
-        [Column(Name="unique_id", DbType="INT", CanBeNull=false, IsPrimaryKey = true)]
-        public int UniqueId;
+        [Column(Name="id", DbType="INT", CanBeNull=false, IsPrimaryKey = true)]
+        public int Id { get; set; }
 
         [Column(Name="name", DbType="NVARCHAR", CanBeNull=false)]
-        public string Name;
+        public string Name { get; set; }
+
+        [Column(Name="namespace_id", DbType="INT", CanBeNull=false)]
+        public int NamespaceId { get; set; }
     }
 }

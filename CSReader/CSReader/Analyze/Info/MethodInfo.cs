@@ -3,15 +3,15 @@
 namespace CSReader.Analyze.Info
 {
     [Table(Name="method_info")]
-    public class MethodInfo
+    public class MethodInfo : IInfo
     {
-        [Column(Name="unique_id", DbType="INT", CanBeNull=false, IsPrimaryKey = true)]
-        public int UniqueId;
+        [Column(Name="id", DbType="INT", CanBeNull=false, IsPrimaryKey = true)]
+        public int Id { get; set; }
 
         [Column(Name="name", DbType="NVARCHAR", CanBeNull=false)]
-        public string Name;
+        public string Name { get; set; }
 
-        [Column(Name="parent_type_id", DbType="INT")]
-        public int ParentTypeId;
+        [Column(Name="parent_type_id", DbType="INT", CanBeNull = false)]
+        public int ParentTypeId { get; set; }
     }
 }
