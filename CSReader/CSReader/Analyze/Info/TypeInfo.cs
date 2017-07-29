@@ -2,24 +2,13 @@
 
 namespace CSReader.Analyze.Info
 {
+    [Table(Name="type_info")]
     public class TypeInfo
     {
-        public string Name;
+        [Column(Name="unique_id", DbType="INT", CanBeNull=false, IsPrimaryKey = true)]
+        public int UniqueId;
 
-        public TypeInfoTableColumn CreateTableColumn()
-        {
-            return
-                new TypeInfoTableColumn
-                {
-                    Name = Name
-                };
-        }
-    }
-
-    [Table(Name="type_info")]
-    public class TypeInfoTableColumn
-    {
-        [Column(Name="name", DbType="NVARCHAR", CanBeNull=false, IsPrimaryKey = true)]
+        [Column(Name="name", DbType="NVARCHAR", CanBeNull=false)]
         public string Name;
     }
 }

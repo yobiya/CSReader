@@ -33,14 +33,14 @@ namespace CSReader.DB
 
         private void SetUpTables()
         {
-            var tableColumnTypes
+            var tableTypes
                 = new []
                 {
-                    typeof(MethodInfoTableColumn),
-                    typeof(TypeInfoTableColumn)
+                    typeof(MethodInfo),
+                    typeof(TypeInfo)
                 };
 
-            foreach (var type in tableColumnTypes)
+            foreach (var type in tableTypes)
             {
                 using (var createTableCommand = _connection.CreateCommand())
                 {
@@ -60,22 +60,12 @@ namespace CSReader.DB
             Disconnect();
         }
 
-        public void InsertTypeInfos(IEnumerable<TypeInfo> typeInfos)
+        public void InsertInfos<T>(IEnumerable<T> infos) where T : class
         {
             using (var context = new DataContext(_connection))
             {
-                var table = context.GetTable<TypeInfoTableColumn>();
-                table.InsertAllOnSubmit(typeInfos.Select(i => i.CreateTableColumn()));
-                context.SubmitChanges();
-            }
-        }
-
-        public void InsertMethodInfos(IEnumerable<MethodInfo> methodInfos)
-        {
-            using (var context = new DataContext(_connection))
-            {
-                var table = context.GetTable<MethodInfoTableColumn>();
-                table.InsertAllOnSubmit(methodInfos.Select(i => i.CreateTableColumn()));
+                var table = context.GetTable<T>();
+                table.InsertAllOnSubmit(infos);
                 context.SubmitChanges();
             }
         }

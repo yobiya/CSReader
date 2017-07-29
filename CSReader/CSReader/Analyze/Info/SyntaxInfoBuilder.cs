@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CSReader.Analyze.Info
@@ -21,7 +22,7 @@ namespace CSReader.Analyze.Info
                             {
                                 return new TypeInfo
                                 {
-                                    Name = syntax.Identifier.ValueText
+                                    Name = syntax.Identifier.Text
                                 };
                             });
         }
@@ -33,9 +34,11 @@ namespace CSReader.Analyze.Info
                     .MethodDeclarationSyntaxList
                         .Select(syntax =>
                             {
-                                return new MethodInfo()
+                                var parentDeclarationSyntax = syntax.Parent as ClassDeclarationSyntax;
+
+                                return new MethodInfo
                                 {
-                                    Name = syntax.Identifier.ValueText
+                                    Name = syntax.Identifier.Text
                                 };
                             });
         }
