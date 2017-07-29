@@ -1,7 +1,7 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.MSBuild;
-using System.Linq;
+﻿using CSReader.Analyze.Info;
 using CSReader.DB;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.MSBuild;
 
 namespace CSReader.Analyze
 {
@@ -51,6 +51,10 @@ namespace CSReader.Analyze
 
             var syntaxWalker = new SyntaxWalker();
             syntaxWalker.Visit(rootNode);
+
+            var methodInfos = new MethodInfoBuilder(syntaxWalker).Build();
+
+            _dataBase.InsertMethodInfos(methodInfos);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CSReader.Analyze
@@ -8,6 +9,8 @@ namespace CSReader.Analyze
     /// </summary>
     public class SyntaxWalker : CSharpSyntaxWalker
     {
+        public List<MethodDeclarationSyntax> MethodDeclarationSyntaxList { get; } = new List<MethodDeclarationSyntax>();
+
 /*        public virtual void DefaultVisit(SyntaxNode node);
         public virtual void Visit(SyntaxNode node);
         public virtual void VisitAccessorDeclaration(AccessorDeclarationSyntax node);
@@ -124,6 +127,8 @@ namespace CSReader.Analyze
         public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
 		{
 			base.VisitMethodDeclaration(node);
+
+            MethodDeclarationSyntaxList.Add(node);
 		}
 
 /*        public virtual void VisitNameColon(NameColonSyntax node);
