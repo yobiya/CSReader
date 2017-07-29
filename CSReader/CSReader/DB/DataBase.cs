@@ -60,12 +60,12 @@ namespace CSReader.DB
             Disconnect();
         }
 
-        public void InsertInfos<T>(IEnumerable<T> infos) where T : class
+        public void InsertInfo<T>(T info) where T : class
         {
             using (var context = new DataContext(_connection))
             {
                 var table = context.GetTable<T>();
-                table.InsertAllOnSubmit(infos);
+                table.InsertOnSubmit(info);
                 context.SubmitChanges();
             }
         }

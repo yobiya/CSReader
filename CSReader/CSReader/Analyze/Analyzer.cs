@@ -52,9 +52,9 @@ namespace CSReader.Analyze
             var syntaxWalker = new SyntaxWalker();
             syntaxWalker.Visit(rootNode);
 
-            var infoBuilder = new SyntaxInfoBuilder(syntaxWalker);
-            _dataBase.InsertInfos(infoBuilder.BuildTypeInfo());
-            _dataBase.InsertInfos(infoBuilder.BuildMethodInfo());
+            var infoBuilder = new SyntaxInfoBuilder(syntaxWalker, _dataBase);
+            infoBuilder.BuildTypeInfo();
+            infoBuilder.BuildMethodInfo();
         }
     }
 }

@@ -1,46 +1,56 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
-using System.Linq;
+using CSReader.DB;
 
 namespace CSReader.Analyze.Info
 {
     class SyntaxInfoBuilder
     {
         private readonly SyntaxWalker _syntaxWalker;
+        private readonly DataBase _dataBase;
 
-        public SyntaxInfoBuilder(SyntaxWalker syntaxWalker)
+        private int _uniqueId;
+
+        public SyntaxInfoBuilder(SyntaxWalker syntaxWalker, DataBase dataBase)
         {
             _syntaxWalker = syntaxWalker;
+            _dataBase = dataBase;
         }
 
-        public IEnumerable<TypeInfo> BuildTypeInfo()
+        public void BuildTypeInfo()
         {
-            return
-                _syntaxWalker
-                    .ClassDeclarationSyntaxList
-                        .Select(syntax =>
-                            {
-                                return new TypeInfo
-                                {
-                                    Name = syntax.Identifier.Text
-                                };
-                            });
+            foreach (var syntax in _syntaxWalker.ClassDeclarationSyntaxList)
+            {
+                var info
+                    = new TypeInfo
+                        {
+                            UniqueId = GetUniqueId(),
+                            Name = syntax.Identifier.Text
+                        };
+
+                _dataBase.InsertInfo(info);
+            }
         }
 
-        public IEnumerable<MethodInfo> BuildMethodInfo()
+        public void BuildMethodInfo()
         {
-            return
-                _syntaxWalker
-                    .MethodDeclarationSyntaxList
-                        .Select(syntax =>
-                            {
-                                var parentDeclarationSyntax = syntax.Parent as ClassDeclarationSyntax;
+            foreach (var syntax in _syntaxWalker.MethodDeclarationSyntaxList)
+            {
+                var info
+                    = new MethodInfo
+                        {
+                            UniqueId = GetUniqueId(),
+                            Name = syntax.Identifier.Text
+                        };
 
-                                return new MethodInfo
-                                {
-                                    Name = syntax.Identifier.Text
-                                };
-                            });
+                _dataBase.InsertInfo(info);
+            }
+        }
+
+        private int GetUniqueId()
+        {
+            _uniqueId++;
+            return _uniqueId;
         }
     }
 }
