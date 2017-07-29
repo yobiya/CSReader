@@ -35,7 +35,7 @@ namespace CSReader.DB
         {
             using (var createTableCommand = _connection.CreateCommand())
             {
-                createTableCommand.CommandText = MethodInfo.CreateTableCommandText;
+                createTableCommand.CommandText = SQLCreator.CreateCreateTableSQL(typeof(MethodInfoTableColumn));
                 createTableCommand.ExecuteNonQuery();
             }
         }

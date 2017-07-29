@@ -178,6 +178,7 @@
     <Compile Include="Analyze\Analyzer.cs" />
     <Compile Include="Analyze\Info\MethodInfo.cs" />
     <Compile Include="Analyze\Info\MethodInfoBuilder.cs" />
+    <Compile Include="Analyze\Info\TypeInfo.cs" />
     <Compile Include="Analyze\SyntaxWalker.cs" />
     <Compile Include="Command\AnalyzeCommand.cs" />
     <Compile Include="Command\AnalyzeHelpCommand.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Command\ResultCode.cs" />
     <Compile Include="Command\UnsupportedCommand.cs" />
+    <Compile Include="DB\SQLCreator.cs" />
     <Compile Include="DB\DataBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

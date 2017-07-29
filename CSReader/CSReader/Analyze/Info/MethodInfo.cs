@@ -4,17 +4,6 @@ namespace CSReader.Analyze.Info
 {
     public class MethodInfo
     {
-        /// <summary>
-        /// メソッド情報を格納するテーブルの作成SQL文
-        /// </summary>
-        public static string CreateTableCommandText
-        {
-            get
-            {
-                return "CREATE TABLE method_info(name NVARCHAR NOT NULL PRIMARY KEY);";
-            }
-        }
-
         public string Name;
 
         public MethodInfoTableColumn CreateTableColumn()
