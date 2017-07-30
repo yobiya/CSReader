@@ -16,7 +16,7 @@ namespace CSReader.DB
 
         public void Connect(string directoryPath, bool isRead)
         {
-            var dbFilePath = Path.Combine(directoryPath, ".analyze.db");
+            var dbFilePath = Path.Combine(directoryPath, ".csreader.db");
 
             if (!isRead)
             {
@@ -77,7 +77,7 @@ namespace CSReader.DB
         public void Disconnect()
         {
             _connection.Close();
-        }
+       }
 
         void IDisposable.Dispose()
         {
