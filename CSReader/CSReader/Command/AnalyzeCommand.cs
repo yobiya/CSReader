@@ -1,9 +1,9 @@
 ﻿using CSReader.Analyze;
+using CSReader.DB;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using CSReader.DB;
+using System.IO;
 
 namespace CSReader.Command
 {
@@ -13,7 +13,6 @@ namespace CSReader.Command
     public class AnalyzeCommand : ICommand
     {
         public const string COMMAND_NAME = "analyze";
-        private const string DB_FILE_PATH = ".csreader/analyze.db";
 
         private readonly string _solutionPath;
 
@@ -36,7 +35,8 @@ namespace CSReader.Command
             {
                 using (var dataBase = new DataBase())
                 {
-                    dataBase.Connect(_solutionPath);
+                    var solutionDirectoryPath = Path.GetDirectoryName(_solutionPath);
+                    dataBase.Connect(solutionDirectoryPath, false);
 
                     var analyzer = new Analyzer(_solutionPath, dataBase);
                     analyzer.Analyze();

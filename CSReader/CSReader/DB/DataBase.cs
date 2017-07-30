@@ -5,6 +5,8 @@ using System.Data.Linq;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace CSReader.DB
 {
@@ -12,33 +14,44 @@ namespace CSReader.DB
     {
         private SQLiteConnection _connection;
 
-        public void Connect(string solutionPath)
+        public void Connect(string directoryPath, bool isRead)
         {
-            var solutionDirectoryPath = Path.GetDirectoryName(solutionPath);
-            var csreaderDirectoryPath = Path.Combine(solutionDirectoryPath, ".csreader");
-            Directory.CreateDirectory(csreaderDirectoryPath);
-            var dbFilePath = Path.Combine(csreaderDirectoryPath, "analyze.db");
+            var dbFilePath = Path.Combine(directoryPath, ".analyze.db");
 
-            // 既にファイルがある場合は削除する
-            File.Delete(dbFilePath);
+            if (!isRead)
+            {
+                // 既にファイルがある場合は削除する
+                File.Delete(dbFilePath);
+            }
 
-            ConnectImpl(dbFilePath);
+            ConnectImpl(dbFilePath, isRead);
         }
 
-        public void ConnectInMemory()
+        public void ConnectInMemory(bool isRead)
         {
-            ConnectImpl(":memory:");
+            ConnectImpl(":memory:", isRead);
         }
 
-        private void ConnectImpl(string dbFilePath)
+        private void ConnectImpl(string dbFilePath, bool isRead)
         {
             var connectionString = new SQLiteConnectionStringBuilder { DataSource = dbFilePath }.ToString();
 
-            _connection = new SQLiteConnection(connectionString);
+            if (isRead)
+            {
+                _connection = new SQLiteConnection(connectionString, true);
+            }
+            else
+            {
+                _connection = new SQLiteConnection(connectionString);
+            }
+
             _connection.Open();
 
-            // 必要なテーブルを全て作成する
-            SetUpTables();
+            if (!isRead)
+            {
+                // 必要なテーブルを全て作成する
+                SetUpTables();
+            }
         }
 
         private void SetUpTables()

@@ -22,12 +22,18 @@ namespace CSReader.Reader
         public Info Read(string name)
         {
             var typeInfo = _dataBase.SelectInfo<TypeInfo>(new NameFindKey(name));
+            if (typeInfo == null)
+            {
+                return null;
+            }
+
+            var namespaceInfo = _dataBase.SelectInfo<NamespaceInfo>(new IdFindKey(typeInfo.NamespaceId));
 
             return
                 new Info
                 {
                     Name = typeInfo.Name,
-                    NameSpace = _dataBase.SelectInfo<NamespaceInfo>(new IdFindKey(typeInfo.NamespaceId)).Name
+                    NameSpace = namespaceInfo.Name
                 };
         }
     }

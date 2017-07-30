@@ -15,7 +15,7 @@ namespace UnitTest.Read
         public void Initialize()
         {
             _dataBase = new DataBase();
-            _dataBase.ConnectInMemory();
+            _dataBase.ConnectInMemory(false);
 
             var solutionPath = Target.GetSolutionPath("Simple");
             var analyzer = new Analyzer(solutionPath, _dataBase);

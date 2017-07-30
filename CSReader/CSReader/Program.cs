@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSReader.Command;
 
 namespace CSReader
 {
@@ -10,6 +6,11 @@ namespace CSReader
     {
         static void Main(string[] args)
         {
+            var command = CommandCreator.Create(args);
+
+            var resultCode = command.Execute();
+
+            System.Environment.Exit((int)resultCode);
         }
     }
 }

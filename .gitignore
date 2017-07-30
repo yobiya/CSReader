@@ -4,4 +4,4 @@
 bin
 obj
 packages
-.csreader
+.analyze.db
