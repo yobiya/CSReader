@@ -22,6 +22,16 @@ namespace CSReader.DB
             // 既にファイルがある場合は削除する
             File.Delete(dbFilePath);
 
+            ConnectImpl(dbFilePath);
+        }
+
+        public void ConnectInMemory()
+        {
+            ConnectImpl(":memory:");
+        }
+
+        private void ConnectImpl(string dbFilePath)
+        {
             var connectionString = new SQLiteConnectionStringBuilder { DataSource = dbFilePath }.ToString();
 
             _connection = new SQLiteConnection(connectionString);

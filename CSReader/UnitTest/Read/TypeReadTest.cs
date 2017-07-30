@@ -14,10 +14,10 @@ namespace UnitTest.Read
         [TestInitialize]
         public void Initialize()
         {
-            var solutionPath = Target.GetSolutionPath("Simple");
             _dataBase = new DataBase();
-            _dataBase.Connect(solutionPath);
+            _dataBase.ConnectInMemory();
 
+            var solutionPath = Target.GetSolutionPath("Simple");
             var analyzer = new Analyzer(solutionPath, _dataBase);
             analyzer.Analyze();
         }
