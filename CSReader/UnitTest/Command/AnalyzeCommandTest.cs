@@ -23,12 +23,12 @@ namespace UnitTest.Command
         }
 
         [TestMethod]
+        [ExpectedException(typeof(System.AggregateException))]
         public void SolutionNotFoundTest()
-		{
+        {
             var args = new string[] { "analyze", "dummy.sln" };
             var command = CommandCreator.Create(args);
-			var resultCode = command.Execute();
-			Assert.AreEqual(ResultCode.Error, resultCode);
-		}
+            command.Execute();
+        }
     }
 }

@@ -5,10 +5,10 @@
         /// <summary>
         /// コマンドを実行する
         /// </summary>
-        /// <returns>コマンドの結果コード</returns>
-        public ResultCode Execute()
+        /// <returns>ヘルプの文字列</returns>
+        public string Execute()
         {
-            return ResultCode.Error;
+            return string.Empty;
         }
     }
 }

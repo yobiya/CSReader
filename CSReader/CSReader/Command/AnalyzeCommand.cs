@@ -28,27 +28,20 @@ namespace CSReader.Command
         /// <summary>
         /// 解析を実行する
         /// </summary>
-        /// <returns>コマンドの結果コード</returns>
-        public ResultCode Execute()
+        /// <returns>表示する文字列は無いのでnull</returns>
+        public string Execute()
         {
-            try
+            using (var dataBase = new DataBase())
             {
-                using (var dataBase = new DataBase())
-                {
-                    var solutionDirectoryPath = Path.GetDirectoryName(_solutionPath);
-                    dataBase.Connect(solutionDirectoryPath, false);
+                var solutionDirectoryPath = Path.GetDirectoryName(_solutionPath);
+                dataBase.Connect(solutionDirectoryPath, false);
 
-                    var analyzer = new Analyzer(_solutionPath, dataBase);
-                    analyzer.Analyze();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine(e);
-                return ResultCode.Error;
+                var analyzer = new Analyzer(_solutionPath, dataBase);
+                analyzer.Analyze();
             }
 
-            return ResultCode.Sucess;
+            // 表示する文字列は無い
+            return null;
         }
 
         public static ICommand Create(IEnumerable<string> args)

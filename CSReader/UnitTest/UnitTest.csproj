@@ -162,6 +162,7 @@
     <Compile Include="Analyze\AnalyzerTest.cs" />
     <Compile Include="Command\AnalyzeCommandTest.cs" />
     <Compile Include="Command\CommandCreateTest.cs" />
+    <Compile Include="Command\InfoCommandTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Read\TypeReadTest.cs" />
     <Compile Include="TestTarget\Target.cs" />

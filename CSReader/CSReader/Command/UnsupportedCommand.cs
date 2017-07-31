@@ -19,12 +19,11 @@
         /// <summary>
         /// コマンドを実行する
         /// </summary>
-        /// <returns>コマンドの結果コード</returns>
-        public ResultCode Execute()
+        /// <returns>なし</returns>
+        /// <exception cref="Exception">エラーメッセージを含む例外</exception>  
+        public string Execute()
         {
-            System.Console.Error.WriteLine("'" + _commandName + "' is unknown command name.");
-
-            return ResultCode.Error;
+            throw new System.Exception($"'{_commandName}' is unknown command name.");
         }
     }
 }

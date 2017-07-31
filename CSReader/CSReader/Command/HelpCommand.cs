@@ -10,13 +10,10 @@
         /// <summary>
         /// コマンドを実行する
         /// </summary>
-        /// <returns>コマンドの結果コード</returns>
-        public ResultCode Execute()
+        /// <returns>ヘルプ文字列</returns>
+        public string Execute()
         {
-            string helpMessage = @"usage: csr [command_name] [command_args] ...";
-            System.Console.WriteLine(helpMessage);
-
-            return ResultCode.Sucess;
+            return @"usage: csr [command_name] [command_args] ...";
         }
     }
 }

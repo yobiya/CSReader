@@ -1,4 +1,5 @@
-﻿using CSReader.Command;
+﻿using System;
+using CSReader.Command;
 
 namespace CSReader
 {
@@ -6,11 +7,17 @@ namespace CSReader
     {
         static void Main(string[] args)
         {
-            var command = CommandCreator.Create(args);
+            try
+            {
+                var command = CommandCreator.Create(args);
 
-            var resultCode = command.Execute();
-
-            System.Environment.Exit((int)resultCode);
+                var text = command.Execute();
+                Console.WriteLine(text);
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e);
+            }
         }
     }
 }

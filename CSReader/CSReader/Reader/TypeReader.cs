@@ -1,4 +1,5 @@
 ﻿using CSReader.Analyze.Info;
+using CSReader.Command.Print;
 using CSReader.DB;
 using CSReader.Reader.FindKey;
 
@@ -8,7 +9,10 @@ namespace CSReader.Reader
     {
         public class Info
         {
+            [Value("name")]
             public string Name;
+
+            [Value("namespace")]
             public string NameSpace;
         }
 

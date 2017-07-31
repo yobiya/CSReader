@@ -1,10 +1,12 @@
-﻿using CSReader.Analyze.Info;
+﻿using CSReader.Command.Print;
 using CSReader.DB;
 using CSReader.Reader;
-using CSReader.Reader.FindKey;
 
 namespace CSReader.Command.Info
 {
+    /// <summary>
+    /// 型情報を取得するコマンド
+    /// </summary>
     public class TypeInfoCommand : ICommand
     {
         private readonly TypeReader _typeReader;
@@ -19,18 +21,11 @@ namespace CSReader.Command.Info
         /// <summary>
         /// コマンドを実行する
         /// </summary>
-        /// <returns>コマンドの結果コード</returns>
-        public ResultCode Execute()
+        /// <returns>型情報の文字列</returns>
+        public string Execute()
         {
             var info = _typeReader.Read(_name);
-            if (info == null)
-            {
-                return ResultCode.Error;
-            }
-
-            System.Console.WriteLine(info.Name);
-
-            return ResultCode.Sucess;
+            return PrintConverter.Convert(info);
         }
     }
 }
