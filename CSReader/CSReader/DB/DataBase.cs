@@ -5,8 +5,6 @@ using System.Data.Linq;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
-using System.Security.Principal;
 
 namespace CSReader.DB
 {
@@ -100,10 +98,24 @@ namespace CSReader.DB
 
         public T SelectInfo<T>(IFindKey key) where T : class, IInfo
         {
+            return SelectInfos<T>(key).SingleOrDefault();
+        }
+
+        public T[] SelectInfos<T>(IFindKey key) where T : class, IInfo
+        {
             using (var context = new DataContext(_connection))
             {
                 var table = context.GetTable<T>();
-                return table.Where(key.Match).SingleOrDefault();
+                return table.Where(key.Match).ToArray();
+            }
+        }
+
+        public T[] SelectInfos<T>(Func<T, bool> compare) where T : class, IInfo
+        {
+            using (var context = new DataContext(_connection))
+            {
+                var table = context.GetTable<T>();
+                return table.Where(compare).ToArray();
             }
         }
     }

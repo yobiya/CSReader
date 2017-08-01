@@ -1,5 +1,5 @@
-﻿using System;
-using CSReader.Command;
+﻿using CSReader.Command;
+using System;
 
 namespace CSReader
 {
@@ -13,10 +13,12 @@ namespace CSReader
 
                 var text = command.Execute();
                 Console.WriteLine(text);
+                Environment.Exit(0);
             }
             catch (Exception e)
             {
                 Console.Error.WriteLine(e);
+                Environment.Exit(1);
             }
         }
     }

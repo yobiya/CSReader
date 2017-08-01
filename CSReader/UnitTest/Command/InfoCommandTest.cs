@@ -14,16 +14,22 @@ namespace UnitTest.Command
                 = new TypeReader.Info
                 {
                     Name = "Program",
-                    NameSpace = "Simple"
+                    NameSpace = "Simple",
+                    Methods = new [] { "Main", "Print" }
                 };
             var text = PrintConverter.Convert(info);
 
             string nl = System.Environment.NewLine;
-            string expectedText = "name" + nl;
-            expectedText += "  Program" + nl;
-            expectedText += nl;
-            expectedText += "namespace" + nl;
-            expectedText += "  Simple" + nl;
+            string expectedText =
+@"name
+  Program
+
+namespace
+  Simple
+
+methods
+  Main
+  Print";
 
             Assert.AreEqual(expectedText, text);
         }

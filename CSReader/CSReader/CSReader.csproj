@@ -190,7 +190,6 @@
     <Compile Include="Command\Info\InfoCommand.cs" />
     <Compile Include="Command\Info\InfoHelpCommand.cs" />
     <Compile Include="Command\Info\TypeInfoCommand.cs" />
-    <Compile Include="Command\ResultCode.cs" />
     <Compile Include="Command\UnsupportedCommand.cs" />
     <Compile Include="Command\Print\PrintConverter.cs" />
     <Compile Include="Command\Print\ValueAttribute.cs" />

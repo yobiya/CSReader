@@ -1,4 +1,5 @@
-﻿using CSReader.Analyze.Info;
+﻿using System.Linq;
+using CSReader.Analyze.Info;
 using CSReader.Command.Print;
 using CSReader.DB;
 using CSReader.Reader.FindKey;
@@ -14,6 +15,9 @@ namespace CSReader.Reader
 
             [Value("namespace")]
             public string NameSpace;
+
+            [Value("methods")]
+            public string[] Methods;
         }
 
         private readonly DataBase _dataBase;
@@ -32,12 +36,14 @@ namespace CSReader.Reader
             }
 
             var namespaceInfo = _dataBase.SelectInfo<NamespaceInfo>(new IdFindKey(typeInfo.NamespaceId));
+            var methodInfos = _dataBase.SelectInfos<MethodInfo>(i => i.ParentTypeId == typeInfo.Id);
 
             return
                 new Info
                 {
                     Name = typeInfo.Name,
-                    NameSpace = namespaceInfo.Name
+                    NameSpace = namespaceInfo.Name,
+                    Methods = methodInfos.Select(i => i.Name).ToArray()
                 };
         }
     }
