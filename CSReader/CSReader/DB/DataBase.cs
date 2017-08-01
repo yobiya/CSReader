@@ -1,5 +1,4 @@
 ﻿using CSReader.Analyze.Info;
-using CSReader.Reader.FindKey;
 using System;
 using System.Data.Linq;
 using System.Data.SQLite;
@@ -96,26 +95,17 @@ namespace CSReader.DB
             }
         }
 
-        public T SelectInfo<T>(IFindKey key) where T : class, IInfo
+        public T SelectInfo<T>(Func<T, bool> condition) where T : class, IInfo
         {
-            return SelectInfos<T>(key).SingleOrDefault();
+            return SelectInfos<T>(condition).SingleOrDefault();
         }
 
-        public T[] SelectInfos<T>(IFindKey key) where T : class, IInfo
+        public T[] SelectInfos<T>(Func<T, bool> condition) where T : class, IInfo
         {
             using (var context = new DataContext(_connection))
             {
                 var table = context.GetTable<T>();
-                return table.Where(key.Match).ToArray();
-            }
-        }
-
-        public T[] SelectInfos<T>(Func<T, bool> compare) where T : class, IInfo
-        {
-            using (var context = new DataContext(_connection))
-            {
-                var table = context.GetTable<T>();
-                return table.Where(compare).ToArray();
+                return table.Where(condition).ToArray();
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using CSReader.DB;
-using CSReader.Reader.FindKey;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -64,7 +63,7 @@ namespace CSReader.Analyze.Info
         private NamespaceInfo BuildNamespaceInfo(NamespaceDeclarationSyntax syntax)
         {
             string name = ((IdentifierNameSyntax)syntax.Name).Identifier.ValueText;
-            var namespaceInfo = _dataBase.SelectInfo<NamespaceInfo>(new NameFindKey(name));
+            var namespaceInfo = _dataBase.SelectInfo<NamespaceInfo>(i => i.Name == name);
             if (namespaceInfo != null)
             {
                 // 既に保存されているので、そのまま値を返す
@@ -93,7 +92,7 @@ namespace CSReader.Analyze.Info
             var classSyntax = syntax as ClassDeclarationSyntax;
 
             string name = classSyntax.Identifier.Text;
-            var typeInfo = _dataBase.SelectInfo<TypeInfo>(new NameFindKey(name));
+            var typeInfo = _dataBase.SelectInfo<TypeInfo>(i => i.Name == name);
             if (typeInfo != null)
             {
                 // 既に保存されているので、そのまま値を返す

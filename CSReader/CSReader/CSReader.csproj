@@ -197,9 +197,6 @@
     <Compile Include="DB\DataBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reader\FindKey\IFindKey.cs" />
-    <Compile Include="Reader\FindKey\IdFindKey.cs" />
-    <Compile Include="Reader\FindKey\NameFindKey.cs" />
     <Compile Include="Reader\TypeReader.cs" />
   </ItemGroup>
   <ItemGroup>

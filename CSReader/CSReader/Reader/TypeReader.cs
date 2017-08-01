@@ -2,7 +2,6 @@
 using CSReader.Analyze.Info;
 using CSReader.Command.Print;
 using CSReader.DB;
-using CSReader.Reader.FindKey;
 
 namespace CSReader.Reader
 {
@@ -29,13 +28,13 @@ namespace CSReader.Reader
 
         public Info Read(string name)
         {
-            var typeInfo = _dataBase.SelectInfo<TypeInfo>(new NameFindKey(name));
+            var typeInfo = _dataBase.SelectInfo<TypeInfo>(i => i.Name == name);
             if (typeInfo == null)
             {
                 return null;
             }
 
-            var namespaceInfo = _dataBase.SelectInfo<NamespaceInfo>(new IdFindKey(typeInfo.NamespaceId));
+            var namespaceInfo = _dataBase.SelectInfo<NamespaceInfo>(i => i.Id == typeInfo.NamespaceId);
             var methodInfos = _dataBase.SelectInfos<MethodInfo>(i => i.ParentTypeId == typeInfo.Id);
 
             return
