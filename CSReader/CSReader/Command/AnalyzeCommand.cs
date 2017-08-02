@@ -16,6 +16,8 @@ namespace CSReader.Command
 
         private readonly string _solutionPath;
 
+        public event Action OnExecuteEnd;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -39,6 +41,8 @@ namespace CSReader.Command
                 var analyzer = new Analyzer(_solutionPath, dataBase);
                 analyzer.Analyze();
             }
+
+            OnExecuteEnd?.Invoke();
 
             // 表示する文字列は無い
             return null;

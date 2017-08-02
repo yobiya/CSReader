@@ -10,6 +10,7 @@ namespace CSReader.DB
     public class DataBase : IDisposable
     {
         private SQLiteConnection _connection;
+        private DataContext _context;
 
         public void Connect(string directoryPath, bool isRead)
         {
@@ -49,6 +50,8 @@ namespace CSReader.DB
                 // 必要なテーブルを全て作成する
                 SetUpTables();
             }
+
+            _context = new DataContext(_connection);
         }
 
         private void SetUpTables()
@@ -73,8 +76,9 @@ namespace CSReader.DB
 
         public void Disconnect()
         {
+            _context.Dispose();
             _connection.Close();
-       }
+        }
 
         void IDisposable.Dispose()
         {
@@ -87,12 +91,9 @@ namespace CSReader.DB
         /// <param name="info">情報</param>
         public void InsertInfo<T>(T info) where T : class
         {
-            using (var context = new DataContext(_connection))
-            {
-                var table = context.GetTable<T>();
-                table.InsertOnSubmit(info);
-                context.SubmitChanges();
-            }
+            var table = _context.GetTable<T>();
+            table.InsertOnSubmit(info);
+            _context.SubmitChanges();
         }
 
         public T SelectInfo<T>(Func<T, bool> condition) where T : class, IInfo
@@ -102,11 +103,8 @@ namespace CSReader.DB
 
         public T[] SelectInfos<T>(Func<T, bool> condition) where T : class, IInfo
         {
-            using (var context = new DataContext(_connection))
-            {
-                var table = context.GetTable<T>();
-                return table.Where(condition).ToArray();
-            }
+            var table = _context.GetTable<T>();
+            return table.Where(condition).ToArray();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CSReader.Command.Print;
 using CSReader.DB;
 using CSReader.Reader;
+using System;
 
 namespace CSReader.Command.Info
 {
@@ -11,6 +12,8 @@ namespace CSReader.Command.Info
     {
         private readonly TypeReader _typeReader;
         private string _name;
+
+        public event Action OnExecuteEnd;
 
         public TypeInfoCommand(DataBase dataBase, string name)
         {
@@ -25,6 +28,8 @@ namespace CSReader.Command.Info
         public string Execute()
         {
             var info = _typeReader.Read(_name);
+
+            OnExecuteEnd?.Invoke();
             return PrintConverter.Convert(info);
         }
     }

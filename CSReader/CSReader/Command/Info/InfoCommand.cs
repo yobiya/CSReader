@@ -25,13 +25,22 @@ namespace CSReader.Command.Info
             string categoryOption = args.Take(1).Single();
             args = args.Skip(1);
             string name = args.Take(1).Single();
+
+            ICommand command = null;
             switch (categoryOption)
             {
             case "-t":
-                return new TypeInfoCommand(dataBase, name);
+                command = new TypeInfoCommand(dataBase, name);
+                break;
+
+            default:
+                command = new InfoHelpCommand();
+                break;
             }
 
-            return new InfoHelpCommand();
+            command.OnExecuteEnd += dataBase.Disconnect;
+
+            return command;
         }
     }
 }

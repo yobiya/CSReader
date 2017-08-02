@@ -1,10 +1,14 @@
-﻿namespace CSReader.Command
+﻿using System;
+
+namespace CSReader.Command
 {
     /// <summary>
     /// コマンドのインターフェイス
     /// </summary>
     public interface ICommand
     {
+        event Action OnExecuteEnd;
+
         /// <summary>
         /// コマンドを実行する
         /// </summary>
