@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CSReader.Command.Info
+namespace CSReader.Command.Find
 {
     /// <summary>
-    /// 解析した情報を表示するコマンド
+    /// 解析した情報を検索するコマンド
     /// </summary>
-    public class InfoCommand
+    public class FindCommand
     {
-        public const string COMMAND_NAME = "info";
+        public const string COMMAND_NAME = "find";
 
         public static ICommand Create(IEnumerable<string> args)
         {
             if (args.Count() == 0)
             {
                 // 引数がなければ、ヘルプコマンドを返す
-                return new InfoHelpCommand();
+                return new FindHelpCommand();
             }
 
             var dataBase = new DataBase();
@@ -24,17 +24,16 @@ namespace CSReader.Command.Info
 
             string categoryOption = args.Take(1).Single();
             args = args.Skip(1);
-            string name = args.Take(1).Single();
 
             ICommand command = null;
             switch (categoryOption)
             {
-            case "-t":
-                command = new TypeInfoCommand(dataBase, name);
+            case "-m":
+                command = new FindMethodCommand(dataBase);
                 break;
 
             default:
-                command = new InfoHelpCommand();
+                command = new FindHelpCommand();
                 break;
             }
 

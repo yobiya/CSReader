@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using CSReader.Analyze.Info;
+﻿using CSReader.Analyze.Info;
 using CSReader.Command.Print;
 using CSReader.DB;
+using System.Linq;
 
 namespace CSReader.Reader
 {

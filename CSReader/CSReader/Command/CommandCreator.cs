@@ -1,4 +1,5 @@
-﻿using CSReader.Command.Info;
+﻿using CSReader.Command.Find;
+using CSReader.Command.Info;
 using System.Linq;
 
 namespace CSReader.Command
@@ -33,6 +34,9 @@ namespace CSReader.Command
 
             case InfoCommand.COMMAND_NAME:
                 return InfoCommand.Create(commandArgs);
+
+            case FindCommand.COMMAND_NAME:
+                return FindCommand.Create(commandArgs);
             }
 
             return new UnsupportedCommand(commandName);
