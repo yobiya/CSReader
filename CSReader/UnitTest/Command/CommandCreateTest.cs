@@ -1,4 +1,5 @@
 ﻿using CSReader.Command;
+using CSReader.Command.Find;
 using CSReader.Command.Info;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -38,6 +39,14 @@ namespace UnitTest.Command
             var args = new string[] { "info", "-t", "class" };
             var command = CommandCreator.Create(args);
             Assert.IsTrue(command is TypeInfoCommand);
+        }
+
+        [TestMethod]
+        public void FindCommandCreateTest()
+        {
+            var args = new string[] { "find", "-m", "method" };
+            var command = CommandCreator.Create(args);
+            Assert.IsTrue(command is FindMethodCommand);
         }
 
         [TestMethod]
