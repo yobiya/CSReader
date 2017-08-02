@@ -8,13 +8,15 @@ namespace CSReader.Analyze.Info
     {
         private readonly SyntaxWalker _syntaxWalker;
         private readonly DataBase _dataBase;
+        private readonly UniqueIdGenerator _idGenerator;
 
         private int _uniqueId;
 
-        public SyntaxInfoBuilder(SyntaxWalker syntaxWalker, DataBase dataBase)
+        public SyntaxInfoBuilder(SyntaxWalker syntaxWalker, DataBase dataBase, UniqueIdGenerator idGenerator)
         {
             _syntaxWalker = syntaxWalker;
             _dataBase = dataBase;
+            _idGenerator = idGenerator;
         }
 
         public void BuildNamespaceInfos()
@@ -40,19 +42,13 @@ namespace CSReader.Analyze.Info
                 var info
                     = new MethodInfo
                         {
-                            Id = GetUniqueId(),
+                            Id = _idGenerator.Generate(),
                             Name = syntax.Identifier.Text,
                             ParentTypeId = BuildTypeInfo(syntax.Parent).Id
                         };
 
                 _dataBase.InsertInfo(info);
             }
-        }
-
-        private int GetUniqueId()
-        {
-            _uniqueId++;
-            return _uniqueId;
         }
 
         /// <summary>
@@ -73,7 +69,7 @@ namespace CSReader.Analyze.Info
             var info
                 = new NamespaceInfo
                     {
-                        Id = GetUniqueId(),
+                        Id = _idGenerator.Generate(),
                         Name = name
                     };
 
@@ -102,7 +98,7 @@ namespace CSReader.Analyze.Info
             var info
                 = new TypeInfo
                     {
-                        Id = GetUniqueId(),
+                        Id = _idGenerator.Generate(),
                         Name = name,
                         NamespaceId = BuildNamespaceInfo(((NamespaceDeclarationSyntax)syntax.Parent)).Id
                     };

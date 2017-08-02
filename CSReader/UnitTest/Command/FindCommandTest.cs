@@ -14,10 +14,10 @@ namespace UnitTest.Command
         private const string SOLUTION_NAME = "Method";
 
         [ClassInitialize()]
-        public static void ClassInitialize()
+        public static void ClassInitialize(TestContext testContext)
         {
             var solutionPath = Target.GetSolutionPath(SOLUTION_NAME);
-            Program.Main(new [] { "analyze", solutionPath });
+            CommandCreator.Create(new [] { "analyze", solutionPath }).Execute();
 
             System.Environment.CurrentDirectory = Target.GetSolutionDirectoryPath(SOLUTION_NAME);
         }

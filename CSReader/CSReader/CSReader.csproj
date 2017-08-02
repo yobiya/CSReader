@@ -182,6 +182,7 @@
     <Compile Include="Analyze\Info\SyntaxInfoBuilder.cs" />
     <Compile Include="Analyze\Info\TypeInfo.cs" />
     <Compile Include="Analyze\SyntaxWalker.cs" />
+    <Compile Include="Analyze\UniqueIdGenerator.cs" />
     <Compile Include="Command\AnalyzeCommand.cs" />
     <Compile Include="Command\AnalyzeHelpCommand.cs" />
     <Compile Include="Command\CommandCreator.cs" />

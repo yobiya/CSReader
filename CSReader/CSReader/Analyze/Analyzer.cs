@@ -12,6 +12,7 @@ namespace CSReader.Analyze
     {
         private readonly string _solutionPath;
         private readonly DataBase _dataBase;
+        private readonly UniqueIdGenerator _idGenerator = new UniqueIdGenerator();
 
         /// <summary>
         /// コンストラクタ
@@ -52,7 +53,7 @@ namespace CSReader.Analyze
             var syntaxWalker = new SyntaxWalker();
             syntaxWalker.Visit(rootNode);
 
-            var infoBuilder = new SyntaxInfoBuilder(syntaxWalker, _dataBase);
+            var infoBuilder = new SyntaxInfoBuilder(syntaxWalker, _dataBase, _idGenerator);
             infoBuilder.BuildNamespaceInfos();
             infoBuilder.BuildTypeInfos();
             infoBuilder.BuildMethodInfos();
