@@ -1,9 +1,8 @@
 ﻿using CSReader.Analyze;
 using CSReader.DB;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 
 namespace CSReader.Command
 {
@@ -14,16 +13,17 @@ namespace CSReader.Command
     {
         public const string COMMAND_NAME = "analyze";
 
+        private readonly DataBaseBase _dataBase;
         private readonly string _solutionPath;
-
-        public event Action OnExecuteEnd;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
+        /// <param name="dataBase">未接続のデータベース</param>
         /// <param name="solutionPath">解析するソリューションのパス</param>
-        private AnalyzeCommand(string solutionPath)
+        private AnalyzeCommand(DataBaseBase dataBase, string solutionPath)
         {
+            _dataBase = dataBase;
             _solutionPath = solutionPath;
         }
 
@@ -33,22 +33,17 @@ namespace CSReader.Command
         /// <returns>表示する文字列は無いのでnull</returns>
         public string Execute()
         {
-            using (var dataBase = new DataBase())
-            {
-                var solutionDirectoryPath = Path.GetDirectoryName(_solutionPath);
-                dataBase.Connect(solutionDirectoryPath, false);
+            var solutionDirectoryPath = Path.GetDirectoryName(_solutionPath);
+            _dataBase.Connect(solutionDirectoryPath, false);
 
-                var analyzer = new Analyzer(_solutionPath, dataBase);
-                analyzer.Analyze();
-            }
-
-            OnExecuteEnd?.Invoke();
+            var analyzer = new Analyzer(_dataBase, _solutionPath);
+            analyzer.Analyze();
 
             // 表示する文字列は無い
             return null;
         }
 
-        public static ICommand Create(IEnumerable<string> args)
+        public static ICommand Create(DataBaseBase dataBase, IEnumerable<string> args)
         {
             if (args.Count() == 0)
             {
@@ -57,7 +52,7 @@ namespace CSReader.Command
             }
 
             var solutionPath = args.First();
-            return new AnalyzeCommand(solutionPath);
+            return new AnalyzeCommand(dataBase, solutionPath);
         }
     }
 }

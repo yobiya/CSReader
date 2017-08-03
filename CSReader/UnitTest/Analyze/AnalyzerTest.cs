@@ -11,14 +11,14 @@ namespace UnitTest.Analyze
         [TestMethod]
         public void AnalyzeTest()
         {
-            using (var dataBase = new DataBase())
-            {
-                dataBase.ConnectInMemory(false);
+            var dataBase = new InMemoryDataBase();
+            dataBase.Connect(null, false);
 
-                var solutionPath = Target.GetSolutionPath("Simple");
-                var analyzer = new Analyzer(solutionPath, dataBase);
-                analyzer.Analyze();
-            }
+            var solutionPath = Target.GetSolutionPath("Simple");
+            var analyzer = new Analyzer(dataBase, solutionPath);
+            analyzer.Analyze();
+
+            dataBase.Disconnect();
         }
     }
 }

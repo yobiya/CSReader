@@ -11,7 +11,7 @@ namespace CSReader.Command.Find
     {
         public const string COMMAND_NAME = "find";
 
-        public static ICommand Create(IEnumerable<string> args)
+        public static ICommand Create(DataBaseBase dataBase, IEnumerable<string> args)
         {
             if (args.Count() == 0)
             {
@@ -19,7 +19,6 @@ namespace CSReader.Command.Find
                 return new FindHelpCommand();
             }
 
-            var dataBase = new DataBase();
             dataBase.Connect(System.Environment.CurrentDirectory, true);
 
             string categoryOption = args.Take(1).Single();
@@ -36,8 +35,6 @@ namespace CSReader.Command.Find
                 command = new FindHelpCommand();
                 break;
             }
-
-            command.OnExecuteEnd += dataBase.Disconnect;
 
             return command;
         }

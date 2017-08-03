@@ -134,11 +134,11 @@ namespace CSReader.Analyze
         public virtual void VisitMemberBindingExpression(MemberBindingExpressionSyntax node);*/
 
         public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
-		{
-			base.VisitMethodDeclaration(node);
+        {
+            base.VisitMethodDeclaration(node);
 
             MethodDeclarationSyntaxList.Add(node);
-		}
+        }
 
 /*        public virtual void VisitNameColon(NameColonSyntax node);
         public virtual void VisitNameEquals(NameEqualsSyntax node);
@@ -224,11 +224,11 @@ namespace CSReader.Analyze
         public virtual void VisitXmlTextAttribute(XmlTextAttributeSyntax node);
         public virtual void VisitYieldStatement(YieldStatementSyntax node);
 
-		public override void DefaultVisit(SyntaxNode node);
-		public override void Visit(SyntaxNode node);
-		public virtual void VisitLeadingTrivia(SyntaxToken token);
-		public virtual void VisitToken(SyntaxToken token);
-		public virtual void VisitTrailingTrivia(SyntaxToken token);
-		public virtual void VisitTrivia(SyntaxTrivia trivia);*/
+        public override void DefaultVisit(SyntaxNode node);
+        public override void Visit(SyntaxNode node);
+        public virtual void VisitLeadingTrivia(SyntaxToken token);
+        public virtual void VisitToken(SyntaxToken token);
+        public virtual void VisitTrailingTrivia(SyntaxToken token);
+        public virtual void VisitTrivia(SyntaxTrivia trivia);*/
     }
 }

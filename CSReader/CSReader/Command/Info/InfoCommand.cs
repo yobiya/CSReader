@@ -11,7 +11,7 @@ namespace CSReader.Command.Info
     {
         public const string COMMAND_NAME = "info";
 
-        public static ICommand Create(IEnumerable<string> args)
+        public static ICommand Create(DataBaseBase dataBase, IEnumerable<string> args)
         {
             if (args.Count() == 0)
             {
@@ -19,7 +19,6 @@ namespace CSReader.Command.Info
                 return new InfoHelpCommand();
             }
 
-            var dataBase = new DataBase();
             dataBase.Connect(System.Environment.CurrentDirectory, true);
 
             string categoryOption = args.Take(1).Single();
@@ -37,8 +36,6 @@ namespace CSReader.Command.Info
                 command = new InfoHelpCommand();
                 break;
             }
-
-            command.OnExecuteEnd += dataBase.Disconnect;
 
             return command;
         }

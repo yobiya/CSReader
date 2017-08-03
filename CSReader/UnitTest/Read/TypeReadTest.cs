@@ -9,16 +9,16 @@ namespace UnitTest.Read
     [TestClass]
     public class TypeReadTest
     {
-        private static DataBase _dataBase;
+        private static DataBaseBase _dataBase;
 
         [TestInitialize]
         public void Initialize()
         {
-            _dataBase = new DataBase();
-            _dataBase.ConnectInMemory(false);
+            _dataBase = new InMemoryDataBase();
+            _dataBase.Connect(null, false);
 
             var solutionPath = Target.GetSolutionPath("Simple");
-            var analyzer = new Analyzer(solutionPath, _dataBase);
+            var analyzer = new Analyzer(_dataBase, solutionPath);
             analyzer.Analyze();
         }
 

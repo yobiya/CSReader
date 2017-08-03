@@ -1,4 +1,5 @@
 ﻿using CSReader.Command;
+using CSReader.DB;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTest.Command
@@ -10,7 +11,7 @@ namespace UnitTest.Command
         public void CreateTest()
         {
             var args = new string[] { "analyze", "dummy.sln" };
-            var command = CommandCreator.Create(args);
+            var command = CommandCreator.Create(null, args);
             Assert.AreEqual(typeof(AnalyzeCommand), command.GetType());
         }
 
@@ -18,7 +19,7 @@ namespace UnitTest.Command
         public void EmptyArgsCreateTest()
         {
             var args = new string[] { "analyze" };
-            var command = CommandCreator.Create(args);
+            var command = CommandCreator.Create(null, args);
             Assert.AreEqual(typeof(AnalyzeHelpCommand), command.GetType());
         }
 
@@ -26,9 +27,13 @@ namespace UnitTest.Command
         [ExpectedException(typeof(System.AggregateException))]
         public void SolutionNotFoundTest()
         {
+            var dataBase = new InMemoryDataBase();
+
             var args = new string[] { "analyze", "dummy.sln" };
-            var command = CommandCreator.Create(args);
+            var command = CommandCreator.Create(dataBase, args);
             command.Execute();
+
+            dataBase.Disconnect();
         }
     }
 }

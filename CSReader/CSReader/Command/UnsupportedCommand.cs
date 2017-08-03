@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CSReader.Command
+﻿namespace CSReader.Command
 {
     /// <summary>
     /// サポートされていないコマンド
@@ -8,8 +6,6 @@ namespace CSReader.Command
     public class UnsupportedCommand : ICommand
     {
         private readonly string _commandName;
-
-        public event Action OnExecuteEnd;
 
         /// <summary>
         /// コンストラクタ
@@ -27,8 +23,6 @@ namespace CSReader.Command
         /// <exception cref="Exception">エラーメッセージを含む例外</exception>  
         public string Execute()
         {
-            OnExecuteEnd?.Invoke();
-
             throw new System.Exception($"'{_commandName}' is unknown command name.");
         }
     }

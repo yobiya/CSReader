@@ -1,5 +1,5 @@
-﻿using CSReader;
-using CSReader.Command;
+﻿using CSReader.Command;
+using CSReader.DB;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UnitTest.TestTarget;
 
@@ -12,20 +12,27 @@ namespace UnitTest.Command
     public class FindCommandTest
     {
         private const string SOLUTION_NAME = "Method";
+        private static readonly DataBaseBase _dataBase = new InMemoryDataBase();
 
         [ClassInitialize()]
         public static void ClassInitialize(TestContext testContext)
         {
             var solutionPath = Target.GetSolutionPath(SOLUTION_NAME);
-            CommandCreator.Create(new [] { "analyze", solutionPath }).Execute();
+            CommandCreator.Create(_dataBase, new [] { "analyze", solutionPath }).Execute();
 
             System.Environment.CurrentDirectory = Target.GetSolutionDirectoryPath(SOLUTION_NAME);
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanUp()
+        {
+            _dataBase.Disconnect();
         }
 
         [TestMethod]
         public void FindMethodNameTest()
         {
-            var command = CommandCreator.Create(new [] { "find", "-m", "VirtualMethod" });
+            var command = CommandCreator.Create(_dataBase, new [] { "find", "-m", "VirtualMethod" });
 
             var result = command.Execute();
 

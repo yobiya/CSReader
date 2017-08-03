@@ -1,4 +1,5 @@
 ﻿using CSReader.Command;
+using CSReader.DB;
 using System;
 
 namespace CSReader
@@ -9,7 +10,8 @@ namespace CSReader
         {
             try
             {
-                var command = CommandCreator.Create(args);
+                var dataBase = new DataBase();
+                var command = CommandCreator.Create(dataBase, args);
 
                 var text = command.Execute();
                 Console.WriteLine(text);

@@ -6,14 +6,14 @@ namespace CSReader.Analyze.Info
 {
     class SyntaxInfoBuilder
     {
+        private readonly DataBaseBase _dataBase;
         private readonly SyntaxWalker _syntaxWalker;
-        private readonly DataBase _dataBase;
         private readonly UniqueIdGenerator _idGenerator;
 
-        public SyntaxInfoBuilder(SyntaxWalker syntaxWalker, DataBase dataBase, UniqueIdGenerator idGenerator)
+        public SyntaxInfoBuilder(DataBaseBase dataBase, SyntaxWalker syntaxWalker, UniqueIdGenerator idGenerator)
         {
-            _syntaxWalker = syntaxWalker;
             _dataBase = dataBase;
+            _syntaxWalker = syntaxWalker;
             _idGenerator = idGenerator;
         }
 

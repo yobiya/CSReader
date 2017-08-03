@@ -1,5 +1,6 @@
 ﻿using CSReader.Command.Find;
 using CSReader.Command.Info;
+using CSReader.DB;
 using System.Linq;
 
 namespace CSReader.Command
@@ -12,9 +13,10 @@ namespace CSReader.Command
         /// <summary>
         /// コンソールの引数から対応するコマンドを生成する
         /// </summary>
+        /// <param name="dataBase">未接続のデータベース</param>
         /// <param name="args">コンソールの引数</param>
         /// <returns>コマンド</returns>
-        public static ICommand Create(string[] args)
+        public static ICommand Create(DataBaseBase dataBase, string[] args)
         {
             if (args.Length == 0)
             {
@@ -30,13 +32,13 @@ namespace CSReader.Command
                 return new HelpCommand();
 
             case AnalyzeCommand.COMMAND_NAME:
-                return AnalyzeCommand.Create(commandArgs);
+                return AnalyzeCommand.Create(dataBase, commandArgs);
 
             case InfoCommand.COMMAND_NAME:
-                return InfoCommand.Create(commandArgs);
+                return InfoCommand.Create(dataBase, commandArgs);
 
             case FindCommand.COMMAND_NAME:
-                return FindCommand.Create(commandArgs);
+                return FindCommand.Create(dataBase, commandArgs);
             }
 
             return new UnsupportedCommand(commandName);

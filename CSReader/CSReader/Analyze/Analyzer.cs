@@ -10,19 +10,19 @@ namespace CSReader.Analyze
     /// </summary>
     public class Analyzer
     {
+        private readonly DataBaseBase _dataBase;
         private readonly string _solutionPath;
-        private readonly DataBase _dataBase;
         private readonly UniqueIdGenerator _idGenerator = new UniqueIdGenerator();
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        /// <param name="solutionPath">ソリューションのパス</param>
         /// <param name="dataBase">接続済みのデータベース</param>
-        public Analyzer(string solutionPath, DataBase dataBase)
+        /// <param name="solutionPath">ソリューションのパス</param>
+        public Analyzer(DataBaseBase dataBase, string solutionPath)
         {
-            _solutionPath = solutionPath;
             _dataBase = dataBase;
+            _solutionPath = solutionPath;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace CSReader.Analyze
             var syntaxWalker = new SyntaxWalker();
             syntaxWalker.Visit(rootNode);
 
-            var infoBuilder = new SyntaxInfoBuilder(syntaxWalker, _dataBase, _idGenerator);
+            var infoBuilder = new SyntaxInfoBuilder(_dataBase, syntaxWalker, _idGenerator);
             infoBuilder.BuildNamespaceInfos();
             infoBuilder.BuildTypeInfos();
             infoBuilder.BuildMethodInfos();

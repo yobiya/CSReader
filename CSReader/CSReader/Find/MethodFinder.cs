@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using CSReader.Analyze.Info;
+﻿using CSReader.Analyze.Info;
 using CSReader.DB;
+using System.Collections.Generic;
 
 namespace CSReader.Find
 {
@@ -17,10 +16,10 @@ namespace CSReader.Find
             public bool? IsVirtual;
         }
 
-        private readonly DataBase _dataBase;
+        private readonly DataBaseBase _dataBase;
         private readonly Condition _condition;
 
-        public MethodFinder(DataBase dataBase, Condition condition)
+        public MethodFinder(DataBaseBase dataBase, Condition condition)
         {
             _dataBase = dataBase;
             _condition = condition;

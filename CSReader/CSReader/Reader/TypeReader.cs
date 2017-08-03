@@ -19,9 +19,9 @@ namespace CSReader.Reader
             public string[] Methods;
         }
 
-        private readonly DataBase _dataBase;
+        private readonly DataBaseBase _dataBase;
 
-        public TypeReader(DataBase dataBase)
+        public TypeReader(DataBaseBase dataBase)
         {
             _dataBase = dataBase;
         }

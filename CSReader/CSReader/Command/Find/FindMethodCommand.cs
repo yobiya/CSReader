@@ -12,12 +12,10 @@ namespace CSReader.Command.Find
     /// </summary>
     public class FindMethodCommand : ICommand
     {
-        private readonly DataBase _dataBase;
+        private readonly DataBaseBase _dataBase;
         private readonly MethodFinder _finder;
 
-        public event Action OnExecuteEnd;
-
-        private FindMethodCommand(DataBase dataBase, MethodFinder.Condition condition)
+        private FindMethodCommand(DataBaseBase dataBase, MethodFinder.Condition condition)
         {
             _dataBase = dataBase;
             _finder = new MethodFinder(dataBase, condition);
@@ -47,12 +45,10 @@ namespace CSReader.Command.Find
                         .Aggregate((a, b) => a + Environment.NewLine + b);
             }
 
-            OnExecuteEnd?.Invoke();
-
             return result;
         }
 
-        public static FindMethodCommand Create(DataBase dataBase, IEnumerable<string> args)
+        public static FindMethodCommand Create(DataBaseBase dataBase, IEnumerable<string> args)
         {
             if (args.Count() == 0)
             {
