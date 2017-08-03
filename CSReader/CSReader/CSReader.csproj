@@ -199,6 +199,7 @@
     <Compile Include="Command\Print\ValueAttribute.cs" />
     <Compile Include="DB\SQLCreator.cs" />
     <Compile Include="DB\DataBase.cs" />
+    <Compile Include="Find\MethodFinder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader\TypeReader.cs" />

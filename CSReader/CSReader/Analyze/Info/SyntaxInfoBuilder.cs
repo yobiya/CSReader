@@ -10,8 +10,6 @@ namespace CSReader.Analyze.Info
         private readonly DataBase _dataBase;
         private readonly UniqueIdGenerator _idGenerator;
 
-        private int _uniqueId;
-
         public SyntaxInfoBuilder(SyntaxWalker syntaxWalker, DataBase dataBase, UniqueIdGenerator idGenerator)
         {
             _syntaxWalker = syntaxWalker;

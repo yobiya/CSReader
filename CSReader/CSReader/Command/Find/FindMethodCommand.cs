@@ -1,4 +1,6 @@
-﻿using CSReader.DB;
+﻿using CSReader.Analyze.Info;
+using CSReader.DB;
+using CSReader.Find;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,22 +12,15 @@ namespace CSReader.Command.Find
     /// </summary>
     public class FindMethodCommand : ICommand
     {
-        private class FindCondition
-        {
-            public string MethodName;
-            public bool? IsStatic;
-            public bool? IsVirtual;
-        }
-
         private readonly DataBase _dataBase;
-        private readonly FindCondition _condition;
+        private readonly MethodFinder _finder;
 
         public event Action OnExecuteEnd;
 
-        private FindMethodCommand(DataBase dataBase, FindCondition condition)
+        private FindMethodCommand(DataBase dataBase, MethodFinder.Condition condition)
         {
             _dataBase = dataBase;
-            _condition = condition;
+            _finder = new MethodFinder(dataBase, condition);
         }
 
         /// <summary>
@@ -34,8 +29,27 @@ namespace CSReader.Command.Find
         /// <returns>検索結果</returns>
         public string Execute()
         {
+            var methodInfos = _finder.Find();
+
+            string result = null;
+
+            if (methodInfos.Any())
+            {
+                result
+                    = methodInfos
+                        .Select(i =>
+                            {
+                                var typeInfo = _dataBase.SelectInfo<TypeInfo>(t => t.Id == i.ParentTypeId);
+                                var namespaceInfo = _dataBase.SelectInfo<NamespaceInfo>(n => n.Id == typeInfo.NamespaceId);
+
+                                return $"{namespaceInfo.Name}.{typeInfo.Name}.{i.Name}";
+                            })
+                        .Aggregate((a, b) => a + Environment.NewLine + b);
+            }
+
             OnExecuteEnd?.Invoke();
-            return null;
+
+            return result;
         }
 
         public static FindMethodCommand Create(DataBase dataBase, IEnumerable<string> args)
@@ -45,7 +59,7 @@ namespace CSReader.Command.Find
                 throw new Exception("Find info is nothing.");
             }
 
-            var condition = new FindCondition();
+            var condition = new MethodFinder.Condition();
             foreach (var arg in args)
             {
                 switch (arg)

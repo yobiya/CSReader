@@ -21,7 +21,7 @@ namespace UnitTest.Command
 
             System.Environment.CurrentDirectory = Target.GetSolutionDirectoryPath(SOLUTION_NAME);
         }
-        /*
+
         [TestMethod]
         public void FindMethodNameTest()
         {
@@ -29,9 +29,10 @@ namespace UnitTest.Command
 
             var result = command.Execute();
 
-            string expected = @"Method.VirtualMethod";
+            string expected = @"Method.SubClass.VirtualMethod
+Method.SuperClass.VirtualMethod";
 
             Assert.AreEqual(expected, result);
-        }*/
+        }
     }
 }
