@@ -1,6 +1,7 @@
 ﻿using CSReader.Analyze.Row;
 using CSReader.Command.Print;
 using CSReader.DB;
+using System;
 using System.Linq;
 
 namespace CSReader.Reader
@@ -32,22 +33,38 @@ namespace CSReader.Reader
             _dataBase = dataBase;
         }
 
+        /// <summary>
+        /// 型の情報を読み取る
+        /// </summary>
+        /// <param name="name">型の名前</param>
+        /// <returns>型の情報</returns>
+        /// <exception cref="Exception">対応する型が見つからなかった</exception>  
         public Info Read(string name)
         {
             var typeDec = _dataBase.SelectInfo<TypeDeclarationRow>(i => i.Name == name);
             if (typeDec == null)
             {
-                return null;
+                throw new Exception($"Type name '{name}' is not found.");
             }
 
             string parentName = "[none]";
-            var namespaceDec = _dataBase.GetRows<NamespaceDeclarationRow>().SingleOrDefault(i => i.Id == typeDec.ParentId);
-            if (namespaceDec == null)
+            string namespaceName = "[none]";
+            if (typeDec.ParentId != 0)
             {
-                // 親はネームスペースではなかったので、別の型とみなす
-                var parentTypeDec = _dataBase.GetRows<TypeDeclarationRow>().Single(i => i.Id == typeDec.ParentId);
-                parentName = parentTypeDec.Name;
-                namespaceDec = GetNamespaceDeclarationRow(parentTypeDec.ParentId);
+                // 親のIDを持っている
+                var namespaceDec = _dataBase.GetRows<NamespaceDeclarationRow>().SingleOrDefault(i => i.Id == typeDec.ParentId);
+                if (namespaceDec == null)
+                {
+                    // 親はネームスペースではなかったので、別の型とみなす
+                    var parentTypeDec = _dataBase.GetRows<TypeDeclarationRow>().Single(i => i.Id == typeDec.ParentId);
+                    parentName = parentTypeDec.Name;
+                    namespaceDec = GetNamespaceDeclarationRow(parentTypeDec.ParentId);
+                }
+
+                if (namespaceDec != null)
+                {
+                    namespaceName = namespaceDec.Name;
+                }
             }
 
             var methodInfos = _dataBase.SelectInfos<MethodDeclarationRow>(i => i.ParentTypeId == typeDec.Id);
@@ -58,7 +75,7 @@ namespace CSReader.Reader
                     Name = typeDec.Name,
                     Category = typeDec.CategoryValue.ToString().ToLower(),
                     ParentName = parentName,
-                    Namespace = namespaceDec.Name,
+                    Namespace = namespaceName,
                     Methods = methodInfos.Select(i => i.Name).ToArray()
                 };
         }
@@ -70,11 +87,16 @@ namespace CSReader.Reader
         /// <returns>ネームスペースの定義</returns>
         private NamespaceDeclarationRow GetNamespaceDeclarationRow(int id)
         {
+            if (id == 0)
+            {
+                return null;
+            }
+
             var row = _dataBase.GetRows<NamespaceDeclarationRow>().SingleOrDefault(i => i.Id == id);
 
             if (row == null)
             {
-                var typeDeclarationRow = _dataBase.GetRows<TypeDeclarationRow>().Single(i => i.Id == id);
+                var typeDeclarationRow = _dataBase.GetRows<TypeDeclarationRow>().SingleOrDefault(i => i.Id == id);
                 return GetNamespaceDeclarationRow(typeDeclarationRow.ParentId);
             }
 

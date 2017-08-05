@@ -54,7 +54,7 @@ namespace CSReader.Analyze.Row
                             QualifierValue = ConvertQualifierValue(syntax.Modifiers)
                         };
 
-                _dataBase.InsertInfo(info);
+                _dataBase.Insert(info);
             }
         }
 
@@ -132,7 +132,7 @@ namespace CSReader.Analyze.Row
                         Name = name
                     };
 
-            _dataBase.InsertInfo(info);
+            _dataBase.Insert(info);
 
             return info;
         }
@@ -167,7 +167,7 @@ namespace CSReader.Analyze.Row
                         ParentId = GetSyntaxDeclarationId((dynamic)syntax.Parent)
                     };
 
-            _dataBase.InsertInfo(row);
+            _dataBase.Insert(row);
 
             return row;
         }

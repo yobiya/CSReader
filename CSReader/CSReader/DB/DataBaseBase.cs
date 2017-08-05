@@ -66,10 +66,10 @@ namespace CSReader.DB
         }
 
         /// <summary>
-        /// 対応するテーブルに情報を挿入する
+        /// 対応するテーブルに要素を挿入する
         /// </summary>
         /// <param name="info">情報</param>
-        public void InsertInfo<T>(T info) where T : class
+        public void Insert<T>(T info) where T : class
         {
             var table = _context.GetTable<T>();
             table.InsertOnSubmit(info);

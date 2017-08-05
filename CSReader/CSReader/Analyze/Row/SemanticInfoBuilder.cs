@@ -71,7 +71,7 @@ namespace CSReader.Analyze.Row
                 MethodDeclarationId = methodInfo.Id
             };
 
-            _dataBase.InsertInfo<MethodInvocationRow>(row);
+            _dataBase.Insert<MethodInvocationRow>(row);
         }
 
         private void AnalyzeNode(SyntaxNode node, SymbolInfo symbolInfo)

@@ -84,5 +84,34 @@ methods
 
             Assert.AreEqual(expected, result);
         }
+
+        /// <summary>
+        /// ネームスペースを持たない型の情報出力をテストする
+        /// </summary>
+        [TestMethod]
+        public void HaveNotNamespaceTest()
+        {
+            var command = CommandCreator.Create(_dataBase, new [] { "info", "-t", "NoNamespace" });
+            var result = command.Execute();
+
+            string expected =
+@"name
+  NoNamespace
+
+category
+  class
+
+parent name
+  [none]
+
+namespace
+  [none]
+
+methods
+  Sample1
+  Sample2";
+
+            Assert.AreEqual(expected, result);
+        }
     }
 }
