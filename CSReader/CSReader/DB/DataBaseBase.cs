@@ -1,4 +1,5 @@
 ﻿using CSReader.Analyze.Info;
+using CSReader.Analyze.Row;
 using System;
 using System.Data.Linq;
 using System.Data.SQLite;
@@ -44,7 +45,8 @@ namespace CSReader.DB
                 {
                     typeof(NamespaceInfo),
                     typeof(MethodInfo),
-                    typeof(TypeInfo)
+                    typeof(TypeInfo),
+                    typeof(MethodInvocationRow)
                 };
 
             foreach (var type in tableTypes)

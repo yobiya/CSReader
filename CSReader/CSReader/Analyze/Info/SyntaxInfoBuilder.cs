@@ -1,6 +1,8 @@
 ﻿using CSReader.DB;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CSReader.Analyze.Info
 {
@@ -42,11 +44,44 @@ namespace CSReader.Analyze.Info
                         {
                             Id = _idGenerator.Generate(),
                             Name = syntax.Identifier.Text,
-                            ParentTypeId = BuildTypeInfo(syntax.Parent).Id
+                            ParentTypeId = BuildTypeInfo(syntax.Parent).Id,
+                            UnieuqName = ConvertUniqueName(syntax)
                         };
 
                 _dataBase.InsertInfo(info);
             }
+        }
+
+        private string ConvertUniqueName(MethodDeclarationSyntax syntax)
+        {
+            string name = syntax.Identifier.Text + "(";
+
+            var argTypeNameList = new List<string>();
+            foreach (var param in syntax.ParameterList.Parameters)
+            {
+                var nodes = param.ChildNodes();
+                var first = nodes.FirstOrDefault();
+                if (first == null)
+                {
+                    break;
+                }
+
+                if (first.ToString() == "this")
+                {
+                    nodes = nodes.Skip(1);
+                }
+
+                argTypeNameList.Add(nodes.First().ToString());
+            }
+
+            if (argTypeNameList.Any())
+            {
+                name += argTypeNameList.Aggregate((a, b) => $"{a}, {b}");
+            }
+
+            name += ")";
+
+            return name;
         }
 
         /// <summary>

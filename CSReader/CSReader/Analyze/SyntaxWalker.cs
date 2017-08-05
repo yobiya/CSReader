@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 
 namespace CSReader.Analyze
 {

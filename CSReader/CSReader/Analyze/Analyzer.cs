@@ -2,6 +2,7 @@
 using CSReader.DB;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
+using System.Linq;
 
 namespace CSReader.Analyze
 {
@@ -35,21 +36,27 @@ namespace CSReader.Analyze
 
             foreach (var project in solution.Projects)
             {
-                foreach (var document in project.Documents)
+                var rootNodes = project.Documents.Select(d => d.GetSyntaxRootAsync().Result).ToArray();
+                foreach (var rootNode in rootNodes)
                 {
-                    AnalyzeDocument(document);
+                    AnalyzeDocumentSyntax(rootNode);
+                }
+
+                // 構文解析が終わってから、意味解析を行う
+                var compilation = project.GetCompilationAsync().Result;
+                foreach (var rootNode in rootNodes)
+                {
+                    AnalyzeDocumentSemantic(compilation, rootNode);
                 }
             }
         }
 
         /// <summary>
-        /// ドキュメントを解析する
+        /// ドキュメントを構文解析する
         /// </summary>
-        /// <param name="document">ドキュメント</param>
-        private void AnalyzeDocument(Document document)
+        /// <param name="rootNode">ドキュメントのルートノード</param>
+        private void AnalyzeDocumentSyntax(SyntaxNode rootNode)
         {
-            var rootNode = document.GetSyntaxRootAsync().Result;
-
             var syntaxWalker = new SyntaxWalker();
             syntaxWalker.Visit(rootNode);
 
@@ -57,6 +64,18 @@ namespace CSReader.Analyze
             infoBuilder.BuildNamespaceInfos();
             infoBuilder.BuildTypeInfos();
             infoBuilder.BuildMethodInfos();
+        }
+
+        /// <summary>
+        /// ドキュメントを構文解析する
+        /// </summary>
+        /// <param name="compilation">コンパイル情報</param>
+        /// <param name="rootNode">ドキュメントのルートノード</param>
+        private void AnalyzeDocumentSemantic(Compilation compilation, SyntaxNode rootNode)
+        {
+            var semanticModel = compilation.GetSemanticModel(rootNode.SyntaxTree);
+            var infoBuilder = new SemanticInfoBuilder(_dataBase, semanticModel, rootNode, _idGenerator);
+            infoBuilder.BuildMethodInvocation();
         }
     }
 }

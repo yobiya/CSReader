@@ -13,5 +13,8 @@ namespace CSReader.Analyze.Info
 
         [Column(Name="parent_type_id", DbType="INT", CanBeNull = false)]
         public int ParentTypeId { get; set; }
+
+        [Column(Name="unique_name", DbType="NVARCHAR", CanBeNull=false)]
+        public string UnieuqName { get; set; }
     }
 }
