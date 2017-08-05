@@ -12,6 +12,8 @@ namespace CSReader.Analyze
         public List<NamespaceDeclarationSyntax> NamespaceDeclarationSyntaxList = new List<NamespaceDeclarationSyntax>();
         public List<ClassDeclarationSyntax> ClassDeclarationSyntaxList { get; } = new List<ClassDeclarationSyntax>();
         public List<MethodDeclarationSyntax> MethodDeclarationSyntaxList { get; } = new List<MethodDeclarationSyntax>();
+        public List<StructDeclarationSyntax> StructDeclarationSyntaxList { get; } = new List<StructDeclarationSyntax>();
+
 
 /*        public virtual void DefaultVisit(SyntaxNode node);
         public virtual void Visit(SyntaxNode node);
@@ -187,8 +189,14 @@ namespace CSReader.Analyze
         public virtual void VisitSizeOfExpression(SizeOfExpressionSyntax node);
         public virtual void VisitSkippedTokensTrivia(SkippedTokensTriviaSyntax node);
         public virtual void VisitStackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax node);
-        public virtual void VisitStructDeclaration(StructDeclarationSyntax node);
-        public virtual void VisitSwitchSection(SwitchSectionSyntax node);
+*/
+        public override void VisitStructDeclaration(StructDeclarationSyntax node)
+        {
+            base.VisitStructDeclaration(node);
+
+            StructDeclarationSyntaxList.Add(node);
+        }
+/*        public virtual void VisitSwitchSection(SwitchSectionSyntax node);
         public virtual void VisitSwitchStatement(SwitchStatementSyntax node);
         public virtual void VisitThisExpression(ThisExpressionSyntax node);
         public virtual void VisitThrowStatement(ThrowStatementSyntax node);

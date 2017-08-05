@@ -4,7 +4,7 @@ namespace InfoCommandTestTarget.Test1
 {
     public class Printer
     {
-        public class Message
+        public struct Message
         {
             private readonly string _m1;
             private readonly string _m2;

@@ -12,8 +12,11 @@ namespace CSReader.Reader
             [Value("name")]
             public string Name;
 
-            [Value("parent type")]
-            public string ParentType;
+            [Value("category")]
+            public string Category;
+
+            [Value("parent name")]
+            public string ParentName;
 
             [Value("namespace")]
             public string Namespace;
@@ -53,7 +56,8 @@ namespace CSReader.Reader
                 new Info
                 {
                     Name = typeDec.Name,
-                    ParentType = parentName,
+                    Category = typeDec.CategoryValue.ToString().ToLower(),
+                    ParentName = parentName,
                     Namespace = namespaceDec.Name,
                     Methods = methodInfos.Select(i => i.Name).ToArray()
                 };

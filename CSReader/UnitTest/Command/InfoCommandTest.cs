@@ -41,7 +41,10 @@ namespace UnitTest.Command
 @"name
   Printer
 
-parent type
+category
+  class
+
+parent name
   [none]
 
 namespace
@@ -55,10 +58,10 @@ methods
         }
 
         /// <summary>
-        /// 内部クラスの情報出力をテストする
+        /// 内部構造体の情報出力をテストする
         /// </summary>
         [TestMethod]
-        public void InnerClassInfoTest()
+        public void InnerStructInfoTest()
         {
             var command = CommandCreator.Create(_dataBase, new [] { "info", "-t", "Message" });
             var result = command.Execute();
@@ -67,7 +70,10 @@ methods
 @"name
   Message
 
-parent type
+category
+  struct
+
+parent name
   Printer
 
 namespace

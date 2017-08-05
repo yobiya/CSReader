@@ -19,7 +19,7 @@ namespace CSReader.Analyze.Row
             _idGenerator = idGenerator;
         }
 
-        public void BuildNamespaceInfos()
+        public void BuildNamespaceDeclarations()
         {
             foreach (var syntax in _syntaxWalker.NamespaceDeclarationSyntaxList)
             {
@@ -27,15 +27,20 @@ namespace CSReader.Analyze.Row
             }
         }
 
-        public void BuildTypeInfos()
+        public void BuildTypeDeclarations()
         {
             foreach (var syntax in _syntaxWalker.ClassDeclarationSyntaxList)
             {
                 BuildTypeDeclarationRow(syntax);
             }
+
+            foreach (var syntax in _syntaxWalker.StructDeclarationSyntaxList)
+            {
+                BuildTypeDeclarationRow(syntax);
+            }
         }
 
-        public void BuildMethodInfos()
+        public void BuildMethodDeclarations()
         {
             foreach (var syntax in _syntaxWalker.MethodDeclarationSyntaxList)
             {
@@ -137,7 +142,7 @@ namespace CSReader.Analyze.Row
         /// </summary>
         /// <param name="syntax">構文</param>
         /// <returns>型定義</returns>
-        private TypeDeclarationRow BuildTypeDeclarationRow(ClassDeclarationSyntax syntax)
+        private TypeDeclarationRow BuildTypeDeclarationRow(BaseTypeDeclarationSyntax syntax)
         {
             string name = syntax.Identifier.Text;
             var typeInfo = _dataBase.SelectInfo<TypeDeclarationRow>(i => i.Name == name);
@@ -147,23 +152,24 @@ namespace CSReader.Analyze.Row
                 return typeInfo;
             }
 
+            var category = TypeDeclarationRow.Category.Class;
+            if (syntax is ClassDeclarationSyntax) { category = TypeDeclarationRow.Category.Class; }
+            else if (syntax is StructDeclarationSyntax) { category = TypeDeclarationRow.Category.Struct; }
+            else if (syntax is InterfaceDeclarationSyntax) { category = TypeDeclarationRow.Category.Interface; }
+            else if (syntax is EnumDeclarationSyntax) { category = TypeDeclarationRow.Category.Enum; }
+
             var row
                 = new TypeDeclarationRow
                     {
                         Id = _idGenerator.Generate(),
                         Name = name,
+                        CategoryValue = category,
                         ParentId = GetSyntaxDeclarationId((dynamic)syntax.Parent)
                     };
 
             _dataBase.InsertInfo(row);
 
             return row;
-        }
-
-        private TypeDeclarationRow BuildTypeDeclarationRow(SyntaxNode syntax)
-        {
-            //todo 未実装
-            return new TypeDeclarationRow { Id = 0 };
         }
 
         private int GetSyntaxDeclarationId(NamespaceDeclarationSyntax syntax)
