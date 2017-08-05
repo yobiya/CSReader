@@ -5,7 +5,8 @@
         static void Main(string[] args)
         {
             var printer = new Test1.Printer();
-            printer.Print("Test message.");
+            var message = new Test1.Printer.Message("Test ", "message");
+            printer.Print(message);
         }
     }
 }
