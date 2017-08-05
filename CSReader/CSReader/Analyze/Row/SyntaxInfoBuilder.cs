@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CSReader.Analyze.Info
+namespace CSReader.Analyze.Row
 {
     class SyntaxInfoBuilder
     {
@@ -40,7 +40,7 @@ namespace CSReader.Analyze.Info
             foreach (var syntax in _syntaxWalker.MethodDeclarationSyntaxList)
             {
                 var info
-                    = new MethodInfo
+                    = new MethodDeclarationRow
                         {
                             Id = _idGenerator.Generate(),
                             Name = syntax.Identifier.Text,
@@ -89,10 +89,10 @@ namespace CSReader.Analyze.Info
         /// </summary>
         /// <param name="syntax">構文</param>
         /// <returns>ネームスペースの情報</returns>
-        private NamespaceInfo BuildNamespaceInfo(NamespaceDeclarationSyntax syntax)
+        private NamespaceDeclarationRow BuildNamespaceInfo(NamespaceDeclarationSyntax syntax)
         {
             string name = ((IdentifierNameSyntax)syntax.Name).Identifier.ValueText;
-            var namespaceInfo = _dataBase.SelectInfo<NamespaceInfo>(i => i.Name == name);
+            var namespaceInfo = _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Name == name);
             if (namespaceInfo != null)
             {
                 // 既に保存されているので、そのまま値を返す
@@ -100,7 +100,7 @@ namespace CSReader.Analyze.Info
             }
 
             var info
-                = new NamespaceInfo
+                = new NamespaceDeclarationRow
                     {
                         Id = _idGenerator.Generate(),
                         Name = name
@@ -116,12 +116,12 @@ namespace CSReader.Analyze.Info
         /// </summary>
         /// <param name="syntax">構文</param>
         /// <returns>型情報</returns>
-        private TypeInfo BuildTypeInfo(SyntaxNode syntax)
+        private TypeDeclarationRow BuildTypeInfo(SyntaxNode syntax)
         {
             var classSyntax = syntax as ClassDeclarationSyntax;
 
             string name = classSyntax.Identifier.Text;
-            var typeInfo = _dataBase.SelectInfo<TypeInfo>(i => i.Name == name);
+            var typeInfo = _dataBase.SelectInfo<TypeDeclarationRow>(i => i.Name == name);
             if (typeInfo != null)
             {
                 // 既に保存されているので、そのまま値を返す
@@ -129,7 +129,7 @@ namespace CSReader.Analyze.Info
             }
 
             var info
-                = new TypeInfo
+                = new TypeDeclarationRow
                     {
                         Id = _idGenerator.Generate(),
                         Name = name,

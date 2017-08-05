@@ -1,4 +1,4 @@
-﻿using CSReader.Analyze.Info;
+﻿using CSReader.Analyze.Row;
 using CSReader.DB;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;

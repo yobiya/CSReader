@@ -1,4 +1,4 @@
-﻿using CSReader.Analyze.Info;
+﻿using CSReader.Analyze.Row;
 using CSReader.DB;
 using CSReader.Find;
 using System;
@@ -37,8 +37,8 @@ namespace CSReader.Command.Find
                     = methodInfos
                         .Select(i =>
                             {
-                                var typeInfo = _dataBase.SelectInfo<TypeInfo>(t => t.Id == i.ParentTypeId);
-                                var namespaceInfo = _dataBase.SelectInfo<NamespaceInfo>(n => n.Id == typeInfo.NamespaceId);
+                                var typeInfo = _dataBase.SelectInfo<TypeDeclarationRow>(t => t.Id == i.ParentTypeId);
+                                var namespaceInfo = _dataBase.SelectInfo<NamespaceDeclarationRow>(n => n.Id == typeInfo.NamespaceId);
 
                                 return $"{namespaceInfo.Name}.{typeInfo.Name}.{i.Name}";
                             })

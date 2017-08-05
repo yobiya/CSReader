@@ -1,9 +1,9 @@
 ﻿using System.Data.Linq.Mapping;
 
-namespace CSReader.Analyze.Info
+namespace CSReader.Analyze.Row
 {
     [Table(Name="method_info")]
-    public class MethodInfo
+    public class MethodDeclarationRow
     {
         [Column(Name="id", DbType="INT", CanBeNull=false, IsPrimaryKey = true)]
         public int Id { get; set; }

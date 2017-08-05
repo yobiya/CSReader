@@ -1,4 +1,4 @@
-﻿using CSReader.Analyze.Info;
+﻿using CSReader.Analyze.Row;
 using CSReader.Command.Print;
 using CSReader.DB;
 using System.Linq;
@@ -28,14 +28,14 @@ namespace CSReader.Reader
 
         public Info Read(string name)
         {
-            var typeInfo = _dataBase.SelectInfo<TypeInfo>(i => i.Name == name);
+            var typeInfo = _dataBase.SelectInfo<TypeDeclarationRow>(i => i.Name == name);
             if (typeInfo == null)
             {
                 return null;
             }
 
-            var namespaceInfo = _dataBase.SelectInfo<NamespaceInfo>(i => i.Id == typeInfo.NamespaceId);
-            var methodInfos = _dataBase.SelectInfos<MethodInfo>(i => i.ParentTypeId == typeInfo.Id);
+            var namespaceInfo = _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Id == typeInfo.NamespaceId);
+            var methodInfos = _dataBase.SelectInfos<MethodDeclarationRow>(i => i.ParentTypeId == typeInfo.Id);
 
             return
                 new Info

@@ -1,5 +1,4 @@
-﻿using CSReader.Analyze.Info;
-using CSReader.Analyze.Row;
+﻿using CSReader.Analyze.Row;
 using System;
 using System.Data.Linq;
 using System.Data.SQLite;
@@ -43,9 +42,9 @@ namespace CSReader.DB
             var tableTypes
                 = new []
                 {
-                    typeof(NamespaceInfo),
-                    typeof(MethodInfo),
-                    typeof(TypeInfo),
+                    typeof(NamespaceDeclarationRow),
+                    typeof(MethodDeclarationRow),
+                    typeof(TypeDeclarationRow),
                     typeof(MethodInvocationRow)
                 };
 

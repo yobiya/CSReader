@@ -1,4 +1,4 @@
-﻿using CSReader.Analyze.Info;
+﻿using CSReader.Analyze.Row;
 using CSReader.DB;
 using System.Collections.Generic;
 
@@ -29,17 +29,17 @@ namespace CSReader.Find
         /// 検索を行う
         /// </summary>
         /// <returns>見つかったメソッド情報のコレクション</returns>
-        public IEnumerable<MethodInfo> Find()
+        public IEnumerable<MethodDeclarationRow> Find()
         {
-            IEnumerable<MethodInfo> methodInfos = null;
+            IEnumerable<MethodDeclarationRow> methodInfos = null;
             if (_condition.MethodName != null)
             {
-                methodInfos = _dataBase.SelectInfos<MethodInfo>(i => i.Name == _condition.MethodName);
+                methodInfos = _dataBase.SelectInfos<MethodDeclarationRow>(i => i.Name == _condition.MethodName);
             }
 
             if (methodInfos == null)
             {
-                return new MethodInfo[0];
+                return new MethodDeclarationRow[0];
             }
 
             return methodInfos;

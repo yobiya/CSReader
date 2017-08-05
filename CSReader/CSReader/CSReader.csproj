@@ -176,11 +176,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyze\Analyzer.cs" />
-    <Compile Include="Analyze\Info\MethodInfo.cs" />
-    <Compile Include="Analyze\Info\NamespaceInfo.cs" />
-    <Compile Include="Analyze\Info\SemanticInfoBuilder.cs" />
-    <Compile Include="Analyze\Info\SyntaxInfoBuilder.cs" />
-    <Compile Include="Analyze\Info\TypeInfo.cs" />
+    <Compile Include="Analyze\Row\MethodDeclarationRow.cs" />
+    <Compile Include="Analyze\Row\NamespaceDeclarationRow.cs" />
+    <Compile Include="Analyze\Row\SemanticInfoBuilder.cs" />
+    <Compile Include="Analyze\Row\SyntaxInfoBuilder.cs" />
+    <Compile Include="Analyze\Row\TypeDeclarationRow.cs" />
     <Compile Include="Analyze\Row\MethodInvocationRow.cs" />
     <Compile Include="Analyze\SyntaxWalker.cs" />
     <Compile Include="Analyze\UniqueIdGenerator.cs" />

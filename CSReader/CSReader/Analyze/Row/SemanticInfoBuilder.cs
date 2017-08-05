@@ -3,9 +3,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
-using CSReader.Analyze.Row;
 
-namespace CSReader.Analyze.Info
+namespace CSReader.Analyze.Row
 {
     public class SemanticInfoBuilder
     {
@@ -52,9 +51,9 @@ namespace CSReader.Analyze.Info
             var parentTypeName = names[length - 2];
             var namespaceName = names.Take(length - 2).Aggregate((a, b) => $"{a}.{b}");
 
-            var methodInfos = _dataBase.SelectInfos<MethodInfo>(i => i.UnieuqName == methodName);
-            var parentTypeInfos = _dataBase.SelectInfos<TypeInfo>(i => i.Name == parentTypeName);
-            var namespaceInfo = _dataBase.SelectInfo<NamespaceInfo>(i => i.Name == namespaceName);
+            var methodInfos = _dataBase.SelectInfos<MethodDeclarationRow>(i => i.UnieuqName == methodName);
+            var parentTypeInfos = _dataBase.SelectInfos<TypeDeclarationRow>(i => i.Name == parentTypeName);
+            var namespaceInfo = _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Name == namespaceName);
 
             if (!methodInfos.Any() || !parentTypeInfos.Any() || namespaceInfo == null)
             {
