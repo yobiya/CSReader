@@ -36,8 +36,21 @@ namespace UnitTest.Command
 
             var result = command.Execute();
 
-            string expected = @"Method.SubClass.VirtualMethod
+            string expected =
+@"Method.SubClass.VirtualMethod
 Method.SuperClass.VirtualMethod";
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void FindMethodVirtualQualifierTest()
+        {
+            var command = CommandCreator.Create(_dataBase, new [] { "find", "-m", "virtual" });
+
+            var result = command.Execute();
+
+            string expected = @"Method.SuperClass.VirtualMethod";
 
             Assert.AreEqual(expected, result);
         }

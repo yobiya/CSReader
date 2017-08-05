@@ -60,8 +60,9 @@ namespace CSReader.Command.Find
             {
                 switch (arg)
                 {
-                case "static": condition.IsStatic = true; break;
-                case "virtual": condition.IsVirtual = true; break;
+                case "virtual": condition.Qualifier = MethodDeclarationRow.Qualifier.Virtual; break;
+                case "override": condition.Qualifier = MethodDeclarationRow.Qualifier.Override; break;
+                case "static": condition.Qualifier = MethodDeclarationRow.Qualifier.Static; break;
                 default: condition.MethodName = arg;  break;
                 }
             }

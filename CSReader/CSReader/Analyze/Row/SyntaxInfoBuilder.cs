@@ -45,7 +45,8 @@ namespace CSReader.Analyze.Row
                             Id = _idGenerator.Generate(),
                             Name = syntax.Identifier.Text,
                             ParentTypeId = BuildTypeInfo(syntax.Parent).Id,
-                            UnieuqName = ConvertUniqueName(syntax)
+                            UnieuqName = ConvertUniqueName(syntax),
+                            QualifierValue = ConvertQualifierValue(syntax.Modifiers)
                         };
 
                 _dataBase.InsertInfo(info);
@@ -82,6 +83,26 @@ namespace CSReader.Analyze.Row
             name += ")";
 
             return name;
+        }
+
+        private int ConvertQualifierValue(SyntaxTokenList syntaxTokenList)
+        {
+            foreach (var token in syntaxTokenList)
+            {
+                switch (token.Text)
+                {
+                case "virtual":
+                    return (int)MethodDeclarationRow.Qualifier.Virtual;
+
+                case "override":
+                    return (int)MethodDeclarationRow.Qualifier.Override;
+
+                case "static":
+                    return (int)MethodDeclarationRow.Qualifier.Static;
+                }
+            }
+
+            return (int)MethodDeclarationRow.Qualifier.None;
         }
 
         /// <summary>

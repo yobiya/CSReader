@@ -1,6 +1,7 @@
 ﻿using CSReader.Analyze.Row;
 using CSReader.DB;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CSReader.Find
 {
@@ -12,13 +13,17 @@ namespace CSReader.Find
         public class Condition
         {
             public string MethodName;
-            public bool? IsStatic;
-            public bool? IsVirtual;
+            public MethodDeclarationRow.Qualifier Qualifier;
         }
 
         private readonly DataBaseBase _dataBase;
         private readonly Condition _condition;
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="dataBase">データベース</param>
+        /// <param name="condition">条件</param>
         public MethodFinder(DataBaseBase dataBase, Condition condition)
         {
             _dataBase = dataBase;
@@ -31,18 +36,18 @@ namespace CSReader.Find
         /// <returns>見つかったメソッド情報のコレクション</returns>
         public IEnumerable<MethodDeclarationRow> Find()
         {
-            IEnumerable<MethodDeclarationRow> methodInfos = null;
+            var rows = _dataBase.GetRows<MethodDeclarationRow>();
             if (_condition.MethodName != null)
             {
-                methodInfos = _dataBase.SelectInfos<MethodDeclarationRow>(i => i.Name == _condition.MethodName);
+                rows = rows.Where(i => i.Name == _condition.MethodName);
             }
 
-            if (methodInfos == null)
+            if (_condition.Qualifier != MethodDeclarationRow.Qualifier.None)
             {
-                return new MethodDeclarationRow[0];
+                rows = rows.Where(i => i.QualifierValue == (int)_condition.Qualifier);
             }
 
-            return methodInfos;
+            return rows;
         }
     }
 }

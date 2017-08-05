@@ -1,5 +1,6 @@
 ﻿using CSReader.Analyze.Row;
 using System;
+using System.Collections.Generic;
 using System.Data.Linq;
 using System.Data.SQLite;
 using System.Linq;
@@ -84,6 +85,11 @@ namespace CSReader.DB
         {
             var table = _context.GetTable<T>();
             return table.Where(condition).ToArray();
+        }
+
+        public IEnumerable<T> GetRows<T>() where T : class
+        {
+            return _context.GetTable<T>();
         }
     }
 }

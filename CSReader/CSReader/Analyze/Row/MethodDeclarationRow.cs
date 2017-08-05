@@ -5,6 +5,8 @@ namespace CSReader.Analyze.Row
     [Table(Name="method_info")]
     public class MethodDeclarationRow
     {
+        public enum Qualifier { None, Virtual, Override, Static }
+
         [Column(Name="id", DbType="INT", CanBeNull=false, IsPrimaryKey = true)]
         public int Id { get; set; }
 
@@ -16,5 +18,8 @@ namespace CSReader.Analyze.Row
 
         [Column(Name="unique_name", DbType="NVARCHAR", CanBeNull=false)]
         public string UnieuqName { get; set; }
+
+        [Column(Name="qualifier", DbType="INT", CanBeNull=false)]
+        public int QualifierValue { get; set; }
     }
 }
