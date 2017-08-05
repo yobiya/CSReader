@@ -41,12 +41,40 @@ namespace UnitTest.Command
 @"name
   Printer
 
+parent type
+  [none]
+
 namespace
   InfoCommandTestTarget.Test1
 
 methods
   Print
   PrintImpl";
+
+            Assert.AreEqual(expected, result);
+        }
+
+        /// <summary>
+        /// 内部クラスの情報出力をテストする
+        /// </summary>
+        [TestMethod]
+        public void InnerClassInfoTest()
+        {
+            var command = CommandCreator.Create(_dataBase, new [] { "info", "-t", "Message" });
+            var result = command.Execute();
+
+            string expected =
+@"name
+  Message
+
+parent type
+  Printer
+
+namespace
+  InfoCommandTestTarget.Test1
+
+methods
+  Get";
 
             Assert.AreEqual(expected, result);
         }

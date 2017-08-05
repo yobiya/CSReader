@@ -12,8 +12,11 @@ namespace CSReader.Reader
             [Value("name")]
             public string Name;
 
+            [Value("parent type")]
+            public string ParentType;
+
             [Value("namespace")]
-            public string NameSpace;
+            public string Namespace;
 
             [Value("methods")]
             public string[] Methods;
@@ -28,22 +31,50 @@ namespace CSReader.Reader
 
         public Info Read(string name)
         {
-            var typeInfo = _dataBase.SelectInfo<TypeDeclarationRow>(i => i.Name == name);
-            if (typeInfo == null)
+            var typeDec = _dataBase.SelectInfo<TypeDeclarationRow>(i => i.Name == name);
+            if (typeDec == null)
             {
                 return null;
             }
 
-            var namespaceInfo = _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Id == typeInfo.NamespaceId);
-            var methodInfos = _dataBase.SelectInfos<MethodDeclarationRow>(i => i.ParentTypeId == typeInfo.Id);
+            string parentName = "[none]";
+            var namespaceDec = _dataBase.GetRows<NamespaceDeclarationRow>().SingleOrDefault(i => i.Id == typeDec.ParentId);
+            if (namespaceDec == null)
+            {
+                // 親はネームスペースではなかったので、別の型とみなす
+                var parentTypeDec = _dataBase.GetRows<TypeDeclarationRow>().Single(i => i.Id == typeDec.ParentId);
+                parentName = parentTypeDec.Name;
+                namespaceDec = GetNamespaceDeclarationRow(parentTypeDec.ParentId);
+            }
+
+            var methodInfos = _dataBase.SelectInfos<MethodDeclarationRow>(i => i.ParentTypeId == typeDec.Id);
 
             return
                 new Info
                 {
-                    Name = typeInfo.Name,
-                    NameSpace = namespaceInfo.Name,
+                    Name = typeDec.Name,
+                    ParentType = parentName,
+                    Namespace = namespaceDec.Name,
                     Methods = methodInfos.Select(i => i.Name).ToArray()
                 };
+        }
+
+        /// <summary>
+        /// 階層を遡り、ネームスペースの定義を取得する
+        /// </summary>
+        /// <param name="id">ID</param>
+        /// <returns>ネームスペースの定義</returns>
+        private NamespaceDeclarationRow GetNamespaceDeclarationRow(int id)
+        {
+            var row = _dataBase.GetRows<NamespaceDeclarationRow>().SingleOrDefault(i => i.Id == id);
+
+            if (row == null)
+            {
+                var typeDeclarationRow = _dataBase.GetRows<TypeDeclarationRow>().Single(i => i.Id == id);
+                return GetNamespaceDeclarationRow(typeDeclarationRow.ParentId);
+            }
+
+            return row;
         }
     }
 }

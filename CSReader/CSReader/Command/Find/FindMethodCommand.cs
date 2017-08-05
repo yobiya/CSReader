@@ -38,7 +38,7 @@ namespace CSReader.Command.Find
                         .Select(i =>
                             {
                                 var typeInfo = _dataBase.SelectInfo<TypeDeclarationRow>(t => t.Id == i.ParentTypeId);
-                                var namespaceInfo = _dataBase.SelectInfo<NamespaceDeclarationRow>(n => n.Id == typeInfo.NamespaceId);
+                                var namespaceInfo = _dataBase.SelectInfo<NamespaceDeclarationRow>(n => n.Id == typeInfo.ParentId);
 
                                 return $"{namespaceInfo.Name}.{typeInfo.Name}.{i.Name}";
                             })

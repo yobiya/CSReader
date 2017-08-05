@@ -11,7 +11,7 @@ namespace CSReader.Analyze.Row
         [Column(Name="name", DbType="NVARCHAR", CanBeNull=false)]
         public string Name { get; set; }
 
-        [Column(Name="namespace_id", DbType="INT", CanBeNull=false)]
-        public int NamespaceId { get; set; }
+        [Column(Name="parent_id", DbType="INT", CanBeNull=false)]
+        public int ParentId { get; set; }
     }
 }

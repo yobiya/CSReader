@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace CSReader.Analyze.Row
 {
-    class SyntaxInfoBuilder
+    public class SyntaxInfoBuilder
     {
         private readonly DataBaseBase _dataBase;
         private readonly SyntaxWalker _syntaxWalker;
@@ -23,7 +23,7 @@ namespace CSReader.Analyze.Row
         {
             foreach (var syntax in _syntaxWalker.NamespaceDeclarationSyntaxList)
             {
-                BuildNamespaceInfo(syntax);
+                BuildNamespaceDeclarationRow(syntax);
             }
         }
 
@@ -31,7 +31,7 @@ namespace CSReader.Analyze.Row
         {
             foreach (var syntax in _syntaxWalker.ClassDeclarationSyntaxList)
             {
-                BuildTypeInfo(syntax);
+                BuildTypeDeclarationRow(syntax);
             }
         }
 
@@ -44,7 +44,7 @@ namespace CSReader.Analyze.Row
                         {
                             Id = _idGenerator.Generate(),
                             Name = syntax.Identifier.Text,
-                            ParentTypeId = BuildTypeInfo(syntax.Parent).Id,
+                            ParentTypeId = BuildTypeDeclarationRow(syntax.Parent).Id,
                             UnieuqName = ConvertUniqueName(syntax),
                             QualifierValue = ConvertQualifierValue(syntax.Modifiers)
                         };
@@ -106,11 +106,11 @@ namespace CSReader.Analyze.Row
         }
 
         /// <summary>
-        /// ネームスペースの情報を構築して保存する
+        /// ネームスペースの定義を構築して保存する
         /// </summary>
         /// <param name="syntax">構文</param>
-        /// <returns>ネームスペースの情報</returns>
-        private NamespaceDeclarationRow BuildNamespaceInfo(NamespaceDeclarationSyntax syntax)
+        /// <returns>ネームスペースの定義</returns>
+        private NamespaceDeclarationRow BuildNamespaceDeclarationRow(NamespaceDeclarationSyntax syntax)
         {
             string name = syntax.Name.ToString();
             var namespaceInfo = _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Name == name);
@@ -133,11 +133,11 @@ namespace CSReader.Analyze.Row
         }
 
         /// <summary>
-        /// クラス、構造体などの型情報を構築して保存する
+        /// クラス、構造体などの型定義を構築して保存する
         /// </summary>
         /// <param name="syntax">構文</param>
-        /// <returns>型情報</returns>
-        private TypeDeclarationRow BuildTypeInfo(SyntaxNode syntax)
+        /// <returns>型定義</returns>
+        private TypeDeclarationRow BuildTypeDeclarationRow(SyntaxNode syntax)
         {
             var classSyntax = syntax as ClassDeclarationSyntax;
 
@@ -149,17 +149,27 @@ namespace CSReader.Analyze.Row
                 return typeInfo;
             }
 
-            var info
+            var row
                 = new TypeDeclarationRow
                     {
                         Id = _idGenerator.Generate(),
                         Name = name,
-                        NamespaceId = BuildNamespaceInfo(((NamespaceDeclarationSyntax)syntax.Parent)).Id
+                        ParentId = GetSyntaxDeclarationId((dynamic)syntax.Parent)
                     };
 
-            _dataBase.InsertInfo(info);
+            _dataBase.InsertInfo(row);
 
-            return info;
+            return row;
+        }
+
+        private int GetSyntaxDeclarationId(NamespaceDeclarationSyntax syntax)
+        {
+            return BuildNamespaceDeclarationRow(syntax).Id;
+        }
+
+        private int GetSyntaxDeclarationId(ClassDeclarationSyntax syntax)
+        {
+            return BuildTypeDeclarationRow(syntax).Id;
         }
     }
 }

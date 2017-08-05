@@ -61,7 +61,7 @@ namespace CSReader.Analyze.Row
                 return;
             }
 
-            var parentTypeInfo = parentTypeInfos.Where(i => i.NamespaceId == namespaceInfo.Id).Single();
+            var parentTypeInfo = parentTypeInfos.Where(i => i.ParentId == namespaceInfo.Id).Single();
             var methodInfo = methodInfos.Where(i => i.ParentTypeId == parentTypeInfo.Id).Single();
 
             var row = new MethodInvocationRow
