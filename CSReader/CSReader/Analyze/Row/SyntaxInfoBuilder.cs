@@ -44,7 +44,7 @@ namespace CSReader.Analyze.Row
                         {
                             Id = _idGenerator.Generate(),
                             Name = syntax.Identifier.Text,
-                            ParentTypeId = BuildTypeDeclarationRow(syntax.Parent).Id,
+                            ParentTypeId = BuildTypeDeclarationRow((dynamic)syntax.Parent).Id,
                             UnieuqName = ConvertUniqueName(syntax),
                             QualifierValue = ConvertQualifierValue(syntax.Modifiers)
                         };
@@ -137,11 +137,9 @@ namespace CSReader.Analyze.Row
         /// </summary>
         /// <param name="syntax">構文</param>
         /// <returns>型定義</returns>
-        private TypeDeclarationRow BuildTypeDeclarationRow(SyntaxNode syntax)
+        private TypeDeclarationRow BuildTypeDeclarationRow(ClassDeclarationSyntax syntax)
         {
-            var classSyntax = syntax as ClassDeclarationSyntax;
-
-            string name = classSyntax.Identifier.Text;
+            string name = syntax.Identifier.Text;
             var typeInfo = _dataBase.SelectInfo<TypeDeclarationRow>(i => i.Name == name);
             if (typeInfo != null)
             {
@@ -162,6 +160,12 @@ namespace CSReader.Analyze.Row
             return row;
         }
 
+        private TypeDeclarationRow BuildTypeDeclarationRow(SyntaxNode syntax)
+        {
+            //todo 未実装
+            return new TypeDeclarationRow { Id = 0 };
+        }
+
         private int GetSyntaxDeclarationId(NamespaceDeclarationSyntax syntax)
         {
             return BuildNamespaceDeclarationRow(syntax).Id;
@@ -170,6 +174,12 @@ namespace CSReader.Analyze.Row
         private int GetSyntaxDeclarationId(ClassDeclarationSyntax syntax)
         {
             return BuildTypeDeclarationRow(syntax).Id;
+        }
+
+        private int GetSyntaxDeclarationId(CompilationUnitSyntax syntax)
+        {
+            // namespaceなし
+            return 0;
         }
     }
 }
