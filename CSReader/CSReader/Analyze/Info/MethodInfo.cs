@@ -3,7 +3,7 @@
 namespace CSReader.Analyze.Info
 {
     [Table(Name="method_info")]
-    public class MethodInfo : IInfo
+    public class MethodInfo
     {
         [Column(Name="id", DbType="INT", CanBeNull=false, IsPrimaryKey = true)]
         public int Id { get; set; }

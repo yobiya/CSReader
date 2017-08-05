@@ -76,12 +76,12 @@ namespace CSReader.DB
             _context.SubmitChanges();
         }
 
-        public T SelectInfo<T>(Func<T, bool> condition) where T : class, IInfo
+        public T SelectInfo<T>(Func<T, bool> condition) where T : class
         {
             return SelectInfos<T>(condition).SingleOrDefault();
         }
 
-        public T[] SelectInfos<T>(Func<T, bool> condition) where T : class, IInfo
+        public T[] SelectInfos<T>(Func<T, bool> condition) where T : class
         {
             var table = _context.GetTable<T>();
             return table.Where(condition).ToArray();

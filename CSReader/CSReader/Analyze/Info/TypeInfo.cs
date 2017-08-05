@@ -3,7 +3,7 @@
 namespace CSReader.Analyze.Info
 {
     [Table(Name="type_info")]
-    public class TypeInfo : IInfo
+    public class TypeInfo
     {
         [Column(Name="id", DbType="INT", CanBeNull=false, IsPrimaryKey = true)]
         public int Id { get; set; }

@@ -3,7 +3,7 @@
 namespace CSReader.Analyze.Info
 {
     [Table(Name = "namespace_info")]
-    public class NamespaceInfo : IInfo
+    public class NamespaceInfo
     {
         [Column(Name = "id", DbType = "INT", CanBeNull = false, IsPrimaryKey = true)]
         public int Id { get; set; }
