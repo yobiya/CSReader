@@ -112,7 +112,7 @@ namespace CSReader.Analyze.Row
         /// <returns>ネームスペースの情報</returns>
         private NamespaceDeclarationRow BuildNamespaceInfo(NamespaceDeclarationSyntax syntax)
         {
-            string name = ((IdentifierNameSyntax)syntax.Name).Identifier.ValueText;
+            string name = syntax.Name.ToString();
             var namespaceInfo = _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Name == name);
             if (namespaceInfo != null)
             {
