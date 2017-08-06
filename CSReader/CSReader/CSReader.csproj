@@ -202,6 +202,7 @@
     <Compile Include="DB\InMemoryDataBase.cs" />
     <Compile Include="DB\SQLCreator.cs" />
     <Compile Include="DB\DataBase.cs" />
+    <Compile Include="Find\Condition.cs" />
     <Compile Include="Find\MethodFinder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

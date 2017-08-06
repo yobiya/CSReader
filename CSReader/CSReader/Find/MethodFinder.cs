@@ -10,24 +10,18 @@ namespace CSReader.Find
     /// </summary>
     public class MethodFinder
     {
-        public class Condition
-        {
-            public string MethodName;
-            public MethodDeclarationRow.Qualifier Qualifier;
-        }
-
         private readonly DataBaseBase _dataBase;
-        private readonly Condition _condition;
+        private readonly IEnumerable<ICondition> _conditions;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="dataBase">データベース</param>
-        /// <param name="condition">条件</param>
-        public MethodFinder(DataBaseBase dataBase, Condition condition)
+        /// <param name="conditions">条件のコレクション</param>
+        public MethodFinder(DataBaseBase dataBase, IEnumerable<ICondition> conditions)
         {
             _dataBase = dataBase;
-            _condition = condition;
+            _conditions = conditions;
         }
 
         /// <summary>
@@ -37,17 +31,14 @@ namespace CSReader.Find
         public IEnumerable<MethodDeclarationRow> Find()
         {
             var rows = _dataBase.GetRows<MethodDeclarationRow>();
-            if (_condition.MethodName != null)
-            {
-                rows = rows.Where(i => i.Name == _condition.MethodName);
-            }
 
-            if (_condition.Qualifier != MethodDeclarationRow.Qualifier.None)
+            foreach (var row in rows)
             {
-                rows = rows.Where(i => i.QualifierValue == (int)_condition.Qualifier);
+                if (_conditions.All(c => c.Match(row)))
+                {
+                    yield return row;
+                }
             }
-
-            return rows;
         }
     }
 }

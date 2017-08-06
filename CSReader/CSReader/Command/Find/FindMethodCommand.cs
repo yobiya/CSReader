@@ -15,8 +15,9 @@ namespace CSReader.Command.Find
         private readonly DataBaseBase _dataBase;
         private readonly MethodFinder _finder;
 
-        private FindMethodCommand(DataBaseBase dataBase, MethodFinder.Condition condition)
+        public FindMethodCommand(DataBaseBase dataBase, IEnumerable<string> args)
         {
+            var condition = CreateConditions(args);    
             _dataBase = dataBase;
             _finder = new MethodFinder(dataBase, condition);
         }
@@ -48,26 +49,32 @@ namespace CSReader.Command.Find
             return result;
         }
 
-        public static FindMethodCommand Create(DataBaseBase dataBase, IEnumerable<string> args)
+        private static IEnumerable<ICondition> CreateConditions(IEnumerable<string> args)
         {
             if (args.Count() == 0)
             {
-                throw new Exception("Find info is nothing.");
+                throw new Exception("'find' method command arguments are empty.");
             }
 
-            var condition = new MethodFinder.Condition();
             foreach (var arg in args)
             {
-                switch (arg)
-                {
-                case "virtual": condition.Qualifier = MethodDeclarationRow.Qualifier.Virtual; break;
-                case "override": condition.Qualifier = MethodDeclarationRow.Qualifier.Override; break;
-                case "static": condition.Qualifier = MethodDeclarationRow.Qualifier.Static; break;
-                default: condition.MethodName = arg;  break;
-                }
-            }
+                var condition = _createCondtions.Select(c => c(arg)).FirstOrDefault(c => c != null);
 
-            return new FindMethodCommand(dataBase, condition);
+                if (condition == null)
+                {
+                    throw new Exception($"'find' method command argument '{arg}' is not supported.");
+                }
+
+                yield return condition;
+            }
         }
+
+        private static Func<string, ICondition>[] _createCondtions =
+        {
+            VirtualCondition.Create,
+            OverrideCondition.Create,
+            StaticCondition.Create,
+            NameCondition.Create
+        };
     }
 }

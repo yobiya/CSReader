@@ -28,7 +28,7 @@ namespace CSReader.Command.Find
             switch (categoryOption)
             {
             case "-m":
-                command = FindMethodCommand.Create(dataBase, args);
+                command = new FindMethodCommand(dataBase, args);
                 break;
 
             default:

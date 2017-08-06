@@ -52,7 +52,7 @@ namespace CSReader.Analyze
                             Name = syntax.Identifier.Text,
                             ParentTypeId = BuildTypeDeclarationRow((dynamic)syntax.Parent).Id,
                             UnieuqName = ConvertUniqueName(syntax),
-                            QualifierValue = ConvertQualifierValue(syntax.Modifiers)
+                            QualifierValue = ConvertQualifier(syntax.Modifiers)
                         };
 
                 _dataBase.Insert(info);
@@ -91,24 +91,24 @@ namespace CSReader.Analyze
             return name;
         }
 
-        private int ConvertQualifierValue(SyntaxTokenList syntaxTokenList)
+        private MethodDeclarationRow.Qualifier ConvertQualifier(SyntaxTokenList syntaxTokenList)
         {
             foreach (var token in syntaxTokenList)
             {
                 switch (token.Text)
                 {
                 case "virtual":
-                    return (int)MethodDeclarationRow.Qualifier.Virtual;
+                    return MethodDeclarationRow.Qualifier.Virtual;
 
                 case "override":
-                    return (int)MethodDeclarationRow.Qualifier.Override;
+                    return MethodDeclarationRow.Qualifier.Override;
 
                 case "static":
-                    return (int)MethodDeclarationRow.Qualifier.Static;
+                    return MethodDeclarationRow.Qualifier.Static;
                 }
             }
 
-            return (int)MethodDeclarationRow.Qualifier.None;
+            return MethodDeclarationRow.Qualifier.None;
         }
 
         /// <summary>

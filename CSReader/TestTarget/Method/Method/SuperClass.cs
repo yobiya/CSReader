@@ -2,6 +2,10 @@
 {
     public class SuperClass
     {
+        public void PublicMethod()
+        {
+        }
+
         public static void StaticMethod()
         {
         }

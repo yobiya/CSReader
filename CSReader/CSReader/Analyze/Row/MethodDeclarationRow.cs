@@ -20,6 +20,6 @@ namespace CSReader.Analyze.Row
         public string UnieuqName { get; set; }
 
         [Column(Name="qualifier", DbType="INT", CanBeNull=false)]
-        public int QualifierValue { get; set; }
+        public Qualifier QualifierValue { get; set; }
     }
 }

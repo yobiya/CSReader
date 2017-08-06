@@ -32,7 +32,7 @@ namespace UnitTest.Command
         [TestMethod]
         public void FindMethodNameTest()
         {
-            var command = CommandCreator.Create(_dataBase, new [] { "find", "-m", "VirtualMethod" });
+            var command = CommandCreator.Create(_dataBase, new [] { "find", "-m", "name==VirtualMethod" });
 
             var result = command.Execute();
 
