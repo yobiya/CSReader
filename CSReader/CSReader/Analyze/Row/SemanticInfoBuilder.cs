@@ -49,34 +49,43 @@ namespace CSReader.Analyze.Row
             var length = names.Length;
             var methodName = names[length - 1];
             var parentTypeName = names[length - 2];
-            var namespaceName = names.Take(length - 2).Aggregate((a, b) => $"{a}.{b}");
+            var namespaceName = (names.Length <= 2) ? null : names.Take(length - 2).Aggregate((a, b) => $"{a}.{b}");
 
             var methodInfos = _dataBase.SelectInfos<MethodDeclarationRow>(i => i.UnieuqName == methodName);
             var parentTypeInfos = _dataBase.SelectInfos<TypeDeclarationRow>(i => i.Name == parentTypeName);
-            var namespaceInfo = _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Name == namespaceName);
+            var namespaceInfo = (namespaceName == null) ? null : _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Name == namespaceName);
 
             if (!methodInfos.Any() || !parentTypeInfos.Any() || namespaceInfo == null)
             {
                 // 定義がなかったので、終了する
+                //todo namespaceは無い場合があるので、適切に対応する
                 return;
             }
 
-            var parentTypeInfo = parentTypeInfos.Where(i => i.ParentId == namespaceInfo.Id).Single();
-            var methodInfo = methodInfos.Where(i => i.ParentTypeId == parentTypeInfo.Id).Single();
-
-            var row = new MethodInvocationRow
+            try
             {
-                Id = _idGenerator.Generate(),
-                Name = node.ToString(),
-                MethodDeclarationId = methodInfo.Id
-            };
+                var parentTypeInfo = parentTypeInfos.Where(i => i.ParentId == namespaceInfo.Id).Single();
+                var methodInfo = methodInfos.Where(i => i.ParentTypeId == parentTypeInfo.Id).Single();
 
-            _dataBase.Insert<MethodInvocationRow>(row);
+                var row = new MethodInvocationRow
+                {
+                    Id = _idGenerator.Generate(),
+                    Name = node.ToString(),
+                    MethodDeclarationId = methodInfo.Id
+                };
+
+                _dataBase.Insert<MethodInvocationRow>(row);
+            }
+            catch (System.Exception e)
+            {
+                //todo 未対応の処理で例外が起きたので、ログを残す
+                System.Console.WriteLine("Warning : " + e.ToString());
+            }
         }
 
         private void AnalyzeNode(SyntaxNode node, SymbolInfo symbolInfo)
         {
-            // 未対応のノードなので無視する
+            //todo 未対応のノードなので無視する
         }
     }
 }

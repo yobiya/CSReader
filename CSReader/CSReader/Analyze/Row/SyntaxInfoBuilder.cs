@@ -177,7 +177,7 @@ namespace CSReader.Analyze.Row
             return BuildNamespaceDeclarationRow(syntax).Id;
         }
 
-        private int GetSyntaxDeclarationId(ClassDeclarationSyntax syntax)
+        private int GetSyntaxDeclarationId(BaseTypeDeclarationSyntax syntax)
         {
             return BuildTypeDeclarationRow(syntax).Id;
         }
