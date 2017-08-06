@@ -15,6 +15,15 @@ namespace CSReader.Command.Find
         private readonly DataBaseBase _dataBase;
         private readonly MethodFinder _finder;
 
+        private static readonly Func<string, DataBaseBase, ICondition>[] _createCondtions =
+        {
+            VirtualCondition.Create,
+            OverrideCondition.Create,
+            StaticCondition.Create,
+            NameCondition.Create,
+            CallCountCondition.Create
+        };
+
         public FindMethodCommand(DataBaseBase dataBase, IEnumerable<string> args)
         {
             var condition = CreateConditions(args);    
@@ -49,7 +58,7 @@ namespace CSReader.Command.Find
             return result;
         }
 
-        private static IEnumerable<ICondition> CreateConditions(IEnumerable<string> args)
+        private IEnumerable<ICondition> CreateConditions(IEnumerable<string> args)
         {
             if (args.Count() == 0)
             {
@@ -58,7 +67,7 @@ namespace CSReader.Command.Find
 
             foreach (var arg in args)
             {
-                var condition = _createCondtions.Select(c => c(arg)).FirstOrDefault(c => c != null);
+                var condition = _createCondtions.Select(c => c(arg, _dataBase)).FirstOrDefault(c => c != null);
 
                 if (condition == null)
                 {
@@ -68,13 +77,5 @@ namespace CSReader.Command.Find
                 yield return condition;
             }
         }
-
-        private static Func<string, ICondition>[] _createCondtions =
-        {
-            VirtualCondition.Create,
-            OverrideCondition.Create,
-            StaticCondition.Create,
-            NameCondition.Create
-        };
     }
 }

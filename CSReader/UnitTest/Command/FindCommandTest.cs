@@ -54,5 +54,17 @@ Method.SuperClass.VirtualMethod";
 
             Assert.AreEqual(expected, result);
         }
+
+        [TestMethod]
+        public void FindMethodCountOneTest()
+        {
+            var command = CommandCreator.Create(_dataBase, new [] { "find", "-m", "call_count==1" });
+
+            var result = command.Execute();
+
+            string expected = @"Method.SuperClass.PublicMethod";
+
+            Assert.AreEqual(expected, result);
+        }
     }
 }

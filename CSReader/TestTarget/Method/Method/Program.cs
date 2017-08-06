@@ -4,6 +4,9 @@
     {
         static void Main(string[] args)
         {
+            var subClass = new SubClass();
+
+            subClass.PublicMethod();
         }
     }
 }
