@@ -60,10 +60,10 @@ namespace CSReader.Analyze
             var syntaxWalker = new SyntaxWalker();
             syntaxWalker.Visit(rootNode);
 
-            var infoBuilder = new SyntaxInfoBuilder(_dataBase, syntaxWalker, _idGenerator);
-            infoBuilder.BuildNamespaceDeclarations();
-            infoBuilder.BuildTypeDeclarations();
-            infoBuilder.BuildMethodDeclarations();
+            var syntaxAnalyzer = new SyntaxAnalyzer(_dataBase, syntaxWalker, _idGenerator);
+            syntaxAnalyzer.BuildNamespaceDeclarations();
+            syntaxAnalyzer.BuildTypeDeclarations();
+            syntaxAnalyzer.BuildMethodDeclarations();
         }
 
         /// <summary>
@@ -74,8 +74,8 @@ namespace CSReader.Analyze
         private void AnalyzeDocumentSemantic(Compilation compilation, SyntaxNode rootNode)
         {
             var semanticModel = compilation.GetSemanticModel(rootNode.SyntaxTree);
-            var infoBuilder = new SemanticInfoBuilder(_dataBase, semanticModel, rootNode, _idGenerator);
-            infoBuilder.BuildMethodInvocation();
+            var semanticAnalyzer = new SemanticAnalyzer(_dataBase, semanticModel, rootNode, _idGenerator);
+            semanticAnalyzer.BuildMethodInvocation();
         }
     }
 }
