@@ -37,25 +37,21 @@ namespace CSReader.Command.Find
         /// <returns>検索結果</returns>
         public string Execute()
         {
-            var methodInfos = _finder.Find();
+            var methodRows = _finder.Find();
 
-            string result = null;
-
-            if (methodInfos.Any())
+            if (!methodRows.Any())
             {
-                result
-                    = methodInfos
-                        .Select(i =>
-                            {
-                                var typeInfo = _dataBase.SelectInfo<TypeDeclarationRow>(t => t.Id == i.ParentTypeId);
-                                var namespaceInfo = _dataBase.SelectInfo<NamespaceDeclarationRow>(n => n.Id == typeInfo.ParentId);
-
-                                return $"{namespaceInfo.Name}.{typeInfo.Name}.{i.Name}";
-                            })
-                        .Aggregate((a, b) => a + Environment.NewLine + b);
+                return null;
             }
 
-            return result;
+            return
+                methodRows
+                    .Select(i =>
+                        {
+                            var parentName = GetAllParentName(i.ParentTypeId);
+                            return (parentName == null) ? i.Name : $"{parentName}.{i.Name}";
+                        })
+                    .Aggregate((a, b) => a + Environment.NewLine + b);
         }
 
         private IEnumerable<ICondition> CreateConditions(IEnumerable<string> args)
@@ -76,6 +72,32 @@ namespace CSReader.Command.Find
 
                 yield return condition;
             }
+        }
+
+        private string GetAllParentName(int parentId)
+        {
+            var parentTypeRow = _dataBase.GetRows<TypeDeclarationRow>().SingleOrDefault(t => t.Id == parentId);
+            if (parentTypeRow == null)
+            {
+                // 親は型の定義ではなかった
+                var namespaceRow = _dataBase.GetRows<NamespaceDeclarationRow>().SingleOrDefault(n => n.Id == parentId);
+                if (namespaceRow == null)
+                {
+                    // 親はネームスペースではなかった
+                    return null;
+                }
+
+                return namespaceRow.Name;
+            }
+
+            var parentName = GetAllParentName(parentTypeRow.ParentId);
+            if (parentName == null)
+            {
+                // 親の名前は無かった
+                return parentTypeRow.Name;
+            }
+
+            return $"{parentName}.{parentTypeRow.Name}";
         }
     }
 }

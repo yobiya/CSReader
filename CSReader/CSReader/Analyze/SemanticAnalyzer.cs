@@ -52,11 +52,11 @@ namespace CSReader.Analyze
             var parentTypeName = names[length - 2];
             var namespaceName = (names.Length <= 2) ? null : names.Take(length - 2).Aggregate((a, b) => $"{a}.{b}");
 
-            var methodInfos = _dataBase.SelectInfos<MethodDeclarationRow>(i => i.UnieuqName == methodName);
-            var parentTypeInfos = _dataBase.SelectInfos<TypeDeclarationRow>(i => i.Name == parentTypeName);
-            var namespaceInfo = (namespaceName == null) ? null : _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Name == namespaceName);
+            var methodRows = _dataBase.SelectInfos<MethodDeclarationRow>(i => i.UnieuqName == methodName);
+            var parentTypeRows = _dataBase.SelectInfos<TypeDeclarationRow>(i => i.Name == parentTypeName);
+            var namespaceRow = (namespaceName == null) ? null : _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Name == namespaceName);
 
-            if (!methodInfos.Any() || !parentTypeInfos.Any() || namespaceInfo == null)
+            if (!methodRows.Any() || !parentTypeRows.Any() || namespaceRow == null)
             {
                 // 定義がなかったので、終了する
                 //todo namespaceは無い場合があるので、適切に対応する
@@ -65,14 +65,14 @@ namespace CSReader.Analyze
 
             try
             {
-                var parentTypeInfo = parentTypeInfos.Where(i => i.ParentId == namespaceInfo.Id).Single();
-                var methodInfo = methodInfos.Where(i => i.ParentTypeId == parentTypeInfo.Id).Single();
+                var parentTypeRow = parentTypeRows.Where(i => i.ParentId == namespaceRow.Id).Single();
+                var methodRow = methodRows.Where(i => i.ParentTypeId == parentTypeRow.Id).Single();
 
                 var row = new MethodInvocationRow
                 {
                     Id = _idGenerator.Generate(),
                     Name = node.ToString(),
-                    MethodDeclarationId = methodInfo.Id
+                    MethodDeclarationId = methodRow.Id
                 };
 
                 _dataBase.Insert<MethodInvocationRow>(row);
