@@ -86,7 +86,7 @@ namespace CSReader.Analyze
                 name += argTypeNameList.Aggregate((a, b) => $"{a}, {b}");
             }
 
-            name += ")";
+            name += ") " + syntax.ReturnType.ToString();
 
             return name;
         }

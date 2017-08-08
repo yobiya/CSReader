@@ -43,12 +43,13 @@ namespace CSReader.Analyze
 
         private void AnalyzeNode(InvocationExpressionSyntax node, SymbolInfo symbolInfo)
         {
-            var methodFullName = symbolInfo.Symbol.ToString();
+            var methodSymbol = (IMethodSymbol)symbolInfo.Symbol;
+            var methodFullName = methodSymbol.ToString();
 
             var names = methodFullName.Split(new [] { '.' });
 
             var length = names.Length;
-            var methodName = names[length - 1];
+            var methodName = names[length - 1] + " " + methodSymbol.ReturnType.ToString();
             var parentTypeName = names[length - 2];
             var namespaceName = (names.Length <= 2) ? null : names.Take(length - 2).Aggregate((a, b) => $"{a}.{b}");
 
