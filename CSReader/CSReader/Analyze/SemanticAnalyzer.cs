@@ -47,8 +47,13 @@ namespace CSReader.Analyze
             var methodFullName = methodSymbol.ToString();
 
             var names = methodFullName.Split(new [] { '.' });
-
             var length = names.Length;
+            if (length == 1)
+            {
+                // ローカルメソッドなので、終了する
+                return;
+            }
+
             var methodName = names[length - 1] + " " + methodSymbol.ReturnType.ToString();
             var parentTypeName = names[length - 2];
             var namespaceName = (names.Length <= 2) ? null : names.Take(length - 2).Aggregate((a, b) => $"{a}.{b}");
