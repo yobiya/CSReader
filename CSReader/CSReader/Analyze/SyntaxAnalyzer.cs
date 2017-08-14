@@ -61,18 +61,18 @@ namespace CSReader.Analyze
             if (row == null)
             {
                 // 保存されていないので、新しく作成して保存する
-                var category = TypeDeclarationRow.Category.Class;
-                if (syntax is ClassDeclarationSyntax) { category = TypeDeclarationRow.Category.Class; }
-                else if (syntax is StructDeclarationSyntax) { category = TypeDeclarationRow.Category.Struct; }
-                else if (syntax is InterfaceDeclarationSyntax) { category = TypeDeclarationRow.Category.Interface; }
-                else if (syntax is EnumDeclarationSyntax) { category = TypeDeclarationRow.Category.Enum; }
+                var typeKind = TypeKind.Unknown;
+                if (syntax is ClassDeclarationSyntax) { typeKind = TypeKind.Class; }
+                else if (syntax is StructDeclarationSyntax) { typeKind = TypeKind.Struct; }
+                else if (syntax is InterfaceDeclarationSyntax) { typeKind = TypeKind.Interface; }
+                else if (syntax is EnumDeclarationSyntax) { typeKind = TypeKind.Enum; }
 
                 row
                     = new TypeDeclarationRow
                         {
                             Id = _idGenerator.Generate(),
                             Name = name,
-                            CategoryValue = category,
+                            TypeKind = typeKind,
                             ParentId = parentId
                         };
 

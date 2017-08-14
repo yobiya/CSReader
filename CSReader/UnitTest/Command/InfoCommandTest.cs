@@ -41,7 +41,7 @@ namespace UnitTest.Command
 @"name
   Printer
 
-category
+kind
   class
 
 parent name
@@ -70,7 +70,7 @@ methods
 @"name
   Message
 
-category
+kind
   struct
 
 parent name
@@ -98,7 +98,7 @@ methods
 @"name
   NoNamespace
 
-category
+kind
   class
 
 parent name
