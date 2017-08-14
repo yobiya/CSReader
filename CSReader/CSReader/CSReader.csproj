@@ -176,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyze\Analyzer.cs" />
+    <Compile Include="Analyze\DeclarationAnalyzer.cs" />
     <Compile Include="Analyze\Row\MethodDeclarationRow.cs" />
     <Compile Include="Analyze\Row\NamespaceDeclarationRow.cs" />
     <Compile Include="Analyze\SemanticAnalyzer.cs" />

@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace CSReader.Analyze
 {
+    /// <summary>
+    /// 意味解析を行う
+    /// </summary>
     public class SemanticAnalyzer
     {
         private readonly DataBaseBase _dataBase;

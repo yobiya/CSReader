@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace CSReader.Analyze
 {
+    /// <summary>
+    /// 構文解析を行う
+    /// </summary>
     public class SyntaxAnalyzer
     {
         private readonly DataBaseBase _dataBase;
