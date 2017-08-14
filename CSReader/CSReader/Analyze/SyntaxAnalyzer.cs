@@ -14,11 +14,13 @@ namespace CSReader.Analyze
     {
         private readonly DataBaseBase _dataBase;
         private readonly UniqueIdGenerator _idGenerator;
+        private readonly DeclarationAnalyzer _declarationAnalyzer;
 
         public SyntaxAnalyzer(DataBaseBase dataBase, UniqueIdGenerator idGenerator)
         {
             _dataBase = dataBase;
             _idGenerator = idGenerator;
+            _declarationAnalyzer = new DeclarationAnalyzer(dataBase, idGenerator);
         }
 
         public void Analyze(CompilationUnitSyntax rootSyntax)
@@ -36,20 +38,7 @@ namespace CSReader.Analyze
 
         private void AnalyzeSyntax(NamespaceDeclarationSyntax syntax, int parentId)
         {
-            string name = syntax.Name.ToString();
-            var row = _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Name == name);
-            if (row == null)
-            {
-                // 保存されていないので、新しく作成して保存する
-                row
-                    = new NamespaceDeclarationRow
-                        {
-                            Id = _idGenerator.Generate(),
-                            Name = name
-                        };
-
-                _dataBase.Insert(row);
-            }
+            var row = _declarationAnalyzer.AnalyzeNamespace(syntax.Name.ToString());
 
             AnalyzeChildNodes(syntax, row.Id);
         }
