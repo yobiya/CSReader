@@ -10,53 +10,93 @@ namespace CSReader.Analyze
     public class SyntaxAnalyzer
     {
         private readonly DataBaseBase _dataBase;
-        private readonly SyntaxWalker _syntaxWalker;
         private readonly UniqueIdGenerator _idGenerator;
 
-        public SyntaxAnalyzer(DataBaseBase dataBase, SyntaxWalker syntaxWalker, UniqueIdGenerator idGenerator)
+        public SyntaxAnalyzer(DataBaseBase dataBase, UniqueIdGenerator idGenerator)
         {
             _dataBase = dataBase;
-            _syntaxWalker = syntaxWalker;
             _idGenerator = idGenerator;
         }
 
-        public void BuildNamespaceDeclarations()
+        public void Analyze(CompilationUnitSyntax rootSyntax)
         {
-            foreach (var syntax in _syntaxWalker.NamespaceDeclarationSyntaxList)
+            AnalyzeChildNodes(rootSyntax, 0);
+        }
+
+        private void AnalyzeChildNodes(SyntaxNode syntaxNode, int parentId)
+        {
+            foreach (var node in syntaxNode.ChildNodes())
             {
-                BuildNamespaceDeclarationRow(syntax);
+                AnalyzeSyntax((dynamic)node, parentId);
             }
         }
 
-        public void BuildTypeDeclarations()
+        private void AnalyzeSyntax(NamespaceDeclarationSyntax syntax, int parentId)
         {
-            foreach (var syntax in _syntaxWalker.ClassDeclarationSyntaxList)
+            string name = syntax.Name.ToString();
+            var row = _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Name == name);
+            if (row == null)
             {
-                BuildTypeDeclarationRow(syntax);
-            }
-
-            foreach (var syntax in _syntaxWalker.StructDeclarationSyntaxList)
-            {
-                BuildTypeDeclarationRow(syntax);
-            }
-        }
-
-        public void BuildMethodDeclarations()
-        {
-            foreach (var syntax in _syntaxWalker.MethodDeclarationSyntaxList)
-            {
-                var info
-                    = new MethodDeclarationRow
+                // 保存されていないので、新しく作成して保存する
+                row
+                    = new NamespaceDeclarationRow
                         {
                             Id = _idGenerator.Generate(),
-                            Name = syntax.Identifier.Text,
-                            ParentTypeId = BuildTypeDeclarationRow((dynamic)syntax.Parent).Id,
-                            UnieuqName = ConvertUniqueName(syntax),
-                            QualifierValue = ConvertQualifier(syntax.Modifiers)
+                            Name = name
                         };
 
-                _dataBase.Insert(info);
+                _dataBase.Insert(row);
             }
+
+            AnalyzeChildNodes(syntax, row.Id);
+        }
+
+        private void AnalyzeSyntax(BaseTypeDeclarationSyntax syntax, int parentId)
+        {
+            string name = syntax.Identifier.Text;
+            var row = _dataBase.SelectInfo<TypeDeclarationRow>(i => i.Name == name && i.ParentId == parentId);
+            if (row == null)
+            {
+                // 保存されていないので、新しく作成して保存する
+                var category = TypeDeclarationRow.Category.Class;
+                if (syntax is ClassDeclarationSyntax) { category = TypeDeclarationRow.Category.Class; }
+                else if (syntax is StructDeclarationSyntax) { category = TypeDeclarationRow.Category.Struct; }
+                else if (syntax is InterfaceDeclarationSyntax) { category = TypeDeclarationRow.Category.Interface; }
+                else if (syntax is EnumDeclarationSyntax) { category = TypeDeclarationRow.Category.Enum; }
+
+                row
+                    = new TypeDeclarationRow
+                        {
+                            Id = _idGenerator.Generate(),
+                            Name = name,
+                            CategoryValue = category,
+                            ParentId = parentId
+                        };
+
+                _dataBase.Insert(row);
+            }
+
+            AnalyzeChildNodes(syntax, row.Id);
+        }
+
+        private void AnalyzeSyntax(MethodDeclarationSyntax syntax, int parentId)
+        {
+            var row
+                = new MethodDeclarationRow
+                    {
+                        Id = _idGenerator.Generate(),
+                        Name = syntax.Identifier.Text,
+                        ParentTypeId = parentId,
+                        UnieuqName = ConvertUniqueName(syntax),
+                        QualifierValue = ConvertQualifier(syntax.Modifiers)
+                    };
+
+            _dataBase.Insert(row);
+        }
+
+        private void AnalyzeSyntax(SyntaxNode syntax, int parentId)
+        {
+            // 未対応の定義は無視する
         }
 
         private string ConvertUniqueName(MethodDeclarationSyntax syntax)
@@ -109,84 +149,6 @@ namespace CSReader.Analyze
             }
 
             return MethodDeclarationRow.Qualifier.None;
-        }
-
-        /// <summary>
-        /// ネームスペースの定義を構築して保存する
-        /// </summary>
-        /// <param name="syntax">構文</param>
-        /// <returns>ネームスペースの定義</returns>
-        private NamespaceDeclarationRow BuildNamespaceDeclarationRow(NamespaceDeclarationSyntax syntax)
-        {
-            string name = syntax.Name.ToString();
-            var namespaceInfo = _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Name == name);
-            if (namespaceInfo != null)
-            {
-                // 既に保存されているので、そのまま値を返す
-                return namespaceInfo;
-            }
-
-            var info
-                = new NamespaceDeclarationRow
-                    {
-                        Id = _idGenerator.Generate(),
-                        Name = name
-                    };
-
-            _dataBase.Insert(info);
-
-            return info;
-        }
-
-        /// <summary>
-        /// クラス、構造体などの型定義を構築して保存する
-        /// </summary>
-        /// <param name="syntax">構文</param>
-        /// <returns>型定義</returns>
-        private TypeDeclarationRow BuildTypeDeclarationRow(BaseTypeDeclarationSyntax syntax)
-        {
-            string name = syntax.Identifier.Text;
-            var typeInfo = _dataBase.SelectInfo<TypeDeclarationRow>(i => i.Name == name);
-            if (typeInfo != null)
-            {
-                // 既に保存されているので、そのまま値を返す
-                return typeInfo;
-            }
-
-            var category = TypeDeclarationRow.Category.Class;
-            if (syntax is ClassDeclarationSyntax) { category = TypeDeclarationRow.Category.Class; }
-            else if (syntax is StructDeclarationSyntax) { category = TypeDeclarationRow.Category.Struct; }
-            else if (syntax is InterfaceDeclarationSyntax) { category = TypeDeclarationRow.Category.Interface; }
-            else if (syntax is EnumDeclarationSyntax) { category = TypeDeclarationRow.Category.Enum; }
-
-            var row
-                = new TypeDeclarationRow
-                    {
-                        Id = _idGenerator.Generate(),
-                        Name = name,
-                        CategoryValue = category,
-                        ParentId = GetSyntaxDeclarationId((dynamic)syntax.Parent)
-                    };
-
-            _dataBase.Insert(row);
-
-            return row;
-        }
-
-        private int GetSyntaxDeclarationId(NamespaceDeclarationSyntax syntax)
-        {
-            return BuildNamespaceDeclarationRow(syntax).Id;
-        }
-
-        private int GetSyntaxDeclarationId(BaseTypeDeclarationSyntax syntax)
-        {
-            return BuildTypeDeclarationRow(syntax).Id;
-        }
-
-        private int GetSyntaxDeclarationId(CompilationUnitSyntax syntax)
-        {
-            // namespaceなし
-            return 0;
         }
     }
 }

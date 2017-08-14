@@ -66,5 +66,17 @@ Method.SuperClass.VirtualMethod";
 
             Assert.AreEqual(expected, result);
         }
+
+        [TestMethod]
+        public void FindMethodHaveNotNamespaceTest()
+        {
+            var command = CommandCreator.Create(_dataBase, new [] { "find", "-m", "name==AddValue" });
+
+            var result = command.Execute();
+
+            string expected = @"NoNamespace.AddValue";
+
+            Assert.AreEqual(expected, result);
+        }
     }
 }

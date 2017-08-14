@@ -182,7 +182,6 @@
     <Compile Include="Analyze\SyntaxAnalyzer.cs" />
     <Compile Include="Analyze\Row\TypeDeclarationRow.cs" />
     <Compile Include="Analyze\Row\MethodInvocationRow.cs" />
-    <Compile Include="Analyze\SyntaxWalker.cs" />
     <Compile Include="Analyze\UniqueIdGenerator.cs" />
     <Compile Include="Command\AnalyzeCommand.cs" />
     <Compile Include="Command\AnalyzeHelpCommand.cs" />

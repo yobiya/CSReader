@@ -1,6 +1,6 @@
-﻿using CSReader.Analyze.Row;
-using CSReader.DB;
+﻿using CSReader.DB;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.MSBuild;
 using System.Linq;
 
@@ -39,7 +39,7 @@ namespace CSReader.Analyze
                 var rootNodes = project.Documents.Select(d => d.GetSyntaxRootAsync().Result).ToArray();
                 foreach (var rootNode in rootNodes)
                 {
-                    AnalyzeDocumentSyntax(rootNode);
+                    AnalyzeDocumentSyntax((CompilationUnitSyntax)rootNode);
                 }
 
                 // 構文解析が終わってから、意味解析を行う
@@ -55,15 +55,10 @@ namespace CSReader.Analyze
         /// ドキュメントを構文解析する
         /// </summary>
         /// <param name="rootNode">ドキュメントのルートノード</param>
-        private void AnalyzeDocumentSyntax(SyntaxNode rootNode)
+        private void AnalyzeDocumentSyntax(CompilationUnitSyntax rootNode)
         {
-            var syntaxWalker = new SyntaxWalker();
-            syntaxWalker.Visit(rootNode);
-
-            var syntaxAnalyzer = new SyntaxAnalyzer(_dataBase, syntaxWalker, _idGenerator);
-            syntaxAnalyzer.BuildNamespaceDeclarations();
-            syntaxAnalyzer.BuildTypeDeclarations();
-            syntaxAnalyzer.BuildMethodDeclarations();
+            var syntaxAnalyzer = new SyntaxAnalyzer(_dataBase, _idGenerator);
+            syntaxAnalyzer.Analyze(rootNode);
         }
 
         /// <summary>
