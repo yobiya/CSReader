@@ -39,7 +39,7 @@ namespace CSReader.Analyze
             return namespaceDeclarationRow;
         }
 
-        public TypeDeclarationRow AnalyzeType(string name, int parentId, Func<TypeKind> getTypeKind)
+        public TypeDeclarationRow AnalyzeType(string name, int parentId, TypeKind typeKind)
         {
             var row = _dataBase.GetRows<TypeDeclarationRow>().FirstOrDefault(i => i.Name == name && i.ParentId == parentId);
             if (row == null)
@@ -50,7 +50,7 @@ namespace CSReader.Analyze
                         {
                             Id = _idGenerator.Generate(),
                             Name = name,
-                            TypeKind = getTypeKind(),
+                            TypeKind = typeKind,
                             ParentId = parentId
                         };
 

@@ -45,28 +45,18 @@ namespace CSReader.Analyze
 
         private void AnalyzeSyntax(BaseTypeDeclarationSyntax syntax, int parentId)
         {
-            string name = syntax.Identifier.Text;
-            var row = _dataBase.SelectInfo<TypeDeclarationRow>(i => i.Name == name && i.ParentId == parentId);
-            if (row == null)
-            {
-                // 保存されていないので、新しく作成して保存する
-                var typeKind = TypeKind.Unknown;
-                if (syntax is ClassDeclarationSyntax) { typeKind = TypeKind.Class; }
-                else if (syntax is StructDeclarationSyntax) { typeKind = TypeKind.Struct; }
-                else if (syntax is InterfaceDeclarationSyntax) { typeKind = TypeKind.Interface; }
-                else if (syntax is EnumDeclarationSyntax) { typeKind = TypeKind.Enum; }
+           TypeKind typeKind = TypeKind.Unknown;
+           if (syntax is ClassDeclarationSyntax) { typeKind = TypeKind.Class; }
+           else if (syntax is StructDeclarationSyntax) { typeKind = TypeKind.Struct; }
+           else if (syntax is InterfaceDeclarationSyntax) { typeKind = TypeKind.Interface; }
+           else if (syntax is EnumDeclarationSyntax) { typeKind = TypeKind.Enum; }
 
-                row
-                    = new TypeDeclarationRow
-                        {
-                            Id = _idGenerator.Generate(),
-                            Name = name,
-                            TypeKind = typeKind,
-                            ParentId = parentId
-                        };
-
-                _dataBase.Insert(row);
-            }
+            var row
+                = _declarationAnalyzer
+                    .AnalyzeType(
+                        syntax.Identifier.Text,
+                        parentId,
+                        typeKind);
 
             AnalyzeChildNodes(syntax, row.Id);
         }
