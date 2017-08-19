@@ -1,7 +1,5 @@
 ﻿using CSReader.Command;
-using CSReader.Command.Print;
 using CSReader.DB;
-using CSReader.Reader;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UnitTest.TestTarget;
 

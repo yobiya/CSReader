@@ -1,9 +1,8 @@
-﻿using System;
-using System.Linq;
-using CSReader.Analyze.Row;
+﻿using CSReader.Analyze.Row;
 using CSReader.DB;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
+using System.Linq;
 
 namespace CSReader.Analyze
 {
