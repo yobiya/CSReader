@@ -37,10 +37,6 @@ namespace CSReader.Analyze
             foreach (var project in solution.Projects)
             {
                 var rootNodes = project.Documents.Select(d => d.GetSyntaxRootAsync().Result).ToArray();
-                foreach (var rootNode in rootNodes)
-                {
-                    AnalyzeDocumentSyntax((CompilationUnitSyntax)rootNode);
-                }
 
                 // 構文解析が終わってから、意味解析を行う
                 var compilation = project.GetCompilationAsync().Result;
@@ -49,16 +45,6 @@ namespace CSReader.Analyze
                     AnalyzeDocumentSemantic(compilation, rootNode);
                 }
             }
-        }
-
-        /// <summary>
-        /// ドキュメントを構文解析する
-        /// </summary>
-        /// <param name="rootNode">ドキュメントのルートノード</param>
-        private void AnalyzeDocumentSyntax(CompilationUnitSyntax rootNode)
-        {
-            var syntaxAnalyzer = new SyntaxAnalyzer(_dataBase, _idGenerator);
-            syntaxAnalyzer.Analyze(rootNode);
         }
 
         /// <summary>

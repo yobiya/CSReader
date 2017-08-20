@@ -102,7 +102,16 @@ namespace CSReader.Analyze
 
             uniqueName += ") " + returnType.ToString();
 
-            var qualifier = SyntaxAnalyzer.ConvertQualifier(node.Modifiers);
+            var qualifier = MethodDeclarationRow.Qualifier.None;
+            foreach (var token in node.Modifiers)
+            {
+                switch (token.Text)
+                {
+                case "virtual": qualifier = MethodDeclarationRow.Qualifier.Virtual; break;
+                case "override": qualifier = MethodDeclarationRow.Qualifier.Override; break;
+                case "static": qualifier = MethodDeclarationRow.Qualifier.Static; break;
+                }
+            }
 
             var row
                 = _declarationAnalyzer
