@@ -59,5 +59,27 @@ namespace CSReader.Analyze
 
             return row;
         }
+
+        public MethodDeclarationRow AnalyzeMethod(string name, int parentId, string uniqueName, MethodDeclarationRow.Qualifier qualifier)
+        {
+            var row = _dataBase.GetRows<MethodDeclarationRow>().FirstOrDefault(i => i.UnieuqName == uniqueName && i.ParentTypeId == parentId);
+            if (row == null)
+            {
+                // 保存されていないので、新しく作成して保存する
+                row
+                    = new MethodDeclarationRow
+                        {
+                            Id = _idGenerator.Generate(),
+                            Name = name,
+                            ParentTypeId = parentId,
+                            UnieuqName = uniqueName,
+                            QualifierValue = qualifier
+                        };
+
+                _dataBase.Insert(row);
+            }
+
+            return row;
+        }
     }
 }

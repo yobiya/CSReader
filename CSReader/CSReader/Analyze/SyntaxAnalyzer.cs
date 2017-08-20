@@ -60,9 +60,10 @@ namespace CSReader.Analyze
 
             AnalyzeChildNodes(syntax, row.Id);
         }
-
+/*
         private void AnalyzeSyntax(MethodDeclarationSyntax syntax, int parentId)
         {
+            // 必ず新しいメソッドの構文が入ってくるので、チェック処理が行われる DeclarationAnalyzer は使用しない
             var row
                 = new MethodDeclarationRow
                     {
@@ -75,7 +76,7 @@ namespace CSReader.Analyze
 
             _dataBase.Insert(row);
         }
-
+ */
         private void AnalyzeSyntax(SyntaxNode syntax, int parentId)
         {
             // 未対応の定義は無視する
@@ -113,7 +114,7 @@ namespace CSReader.Analyze
             return name;
         }
 
-        private MethodDeclarationRow.Qualifier ConvertQualifier(SyntaxTokenList syntaxTokenList)
+        public static MethodDeclarationRow.Qualifier ConvertQualifier(SyntaxTokenList syntaxTokenList)
         {
             foreach (var token in syntaxTokenList)
             {

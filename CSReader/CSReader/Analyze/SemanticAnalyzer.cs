@@ -16,6 +16,7 @@ namespace CSReader.Analyze
         private readonly SemanticModel _semanticModel;
         private readonly SyntaxNode _rootNode;
         private readonly UniqueIdGenerator _idGenerator;
+        private readonly DeclarationAnalyzer _declarationAnalyzer;
 
         public SemanticAnalyzer(DataBaseBase dataBase, SemanticModel semanticModel, SyntaxNode rootNode, UniqueIdGenerator idGenerator)
         {
@@ -23,79 +24,204 @@ namespace CSReader.Analyze
             _semanticModel = semanticModel;
             _rootNode = rootNode;
             _idGenerator = idGenerator;
+            _declarationAnalyzer = new DeclarationAnalyzer(dataBase, idGenerator);
         }
 
         public void BuildMethodInvocation()
         {
-            AnalyzeNodesSemantic(new [] { _rootNode });
+            AnalyzeNodeSemantic((dynamic)_rootNode, 0);
         }
 
-        private void AnalyzeNodesSemantic(IEnumerable<SyntaxNode> nodes)
+        private void AnalyzeChildNodesSemantic(SyntaxNode node, int parentId)
         {
-            foreach (var node in nodes)
+            foreach (var childNode in node.ChildNodes())
             {
-                var symbolInfo = _semanticModel.GetSymbolInfo(node);
-                if (symbolInfo.Symbol != null)
-                {
-                    AnalyzeNode((dynamic)node, symbolInfo);
-                }
-
-                AnalyzeNodesSemantic(node.ChildNodes());
+                AnalyzeNodeSemantic((dynamic)childNode, parentId);
             }
         }
 
-        private void AnalyzeNode(InvocationExpressionSyntax node, SymbolInfo symbolInfo)
+        private void AnalyzeNodeSemantic(NamespaceDeclarationSyntax syntax, int parentId)
+        {
+            var row = _declarationAnalyzer.AnalyzeNamespace(syntax.Name.ToString());
+
+            AnalyzeChildNodesSemantic(syntax, row.Id);
+        }
+
+        private void AnalyzeNodeSemantic(BaseTypeDeclarationSyntax syntax, int parentId)
+        {
+           TypeKind typeKind = TypeKind.Unknown;
+           if (syntax is ClassDeclarationSyntax) { typeKind = TypeKind.Class; }
+           else if (syntax is StructDeclarationSyntax) { typeKind = TypeKind.Struct; }
+           else if (syntax is InterfaceDeclarationSyntax) { typeKind = TypeKind.Interface; }
+           else if (syntax is EnumDeclarationSyntax) { typeKind = TypeKind.Enum; }
+
+            var row
+                = _declarationAnalyzer
+                    .AnalyzeType(
+                        syntax.Identifier.Text,
+                        parentId,
+                        typeKind);
+
+            AnalyzeChildNodesSemantic(syntax, row.Id);
+        }
+
+        private void AnalyzeNodeSemantic(MethodDeclarationSyntax node, int parentId)
+        {
+            // メソッドの定義は引数を最初に処理する
+            var childNodes = node.ChildNodes();
+            var returnType = childNodes.First();
+            var parameterList = childNodes.Skip(1).First();
+
+            var argTypeNameList = new List<string>();
+            string uniqueName = node.Identifier.Text + "(";
+            foreach (var parameter in parameterList.ChildNodes())
+            {
+                var pramChildNodes = parameter.ChildNodes();
+                if(!pramChildNodes.Any())
+                {
+                    continue;
+                }
+
+                SyntaxNode first = pramChildNodes.First();
+                if (first.ToString() == "this")
+                {
+                    uniqueName += "this ";
+                    pramChildNodes = pramChildNodes.Skip(1);
+                    first = pramChildNodes.First();
+                }
+
+                AnalyzeNodeSemantic(first, 0);
+                var symbol= _semanticModel.GetSymbolInfo(first).Symbol;
+                argTypeNameList.Add(symbol.ToString());
+            }
+
+            if (argTypeNameList.Any())
+            {
+                uniqueName += argTypeNameList.Aggregate((a, b) => $"{a}, {b}");
+            }
+
+            uniqueName += ") " + returnType.ToString();
+
+            var qualifier = SyntaxAnalyzer.ConvertQualifier(node.Modifiers);
+
+            var row
+                = _declarationAnalyzer
+                    .AnalyzeMethod(
+                        node.Identifier.Text,
+                        parentId,
+                        uniqueName,
+                        qualifier);
+
+            foreach (var childNode in childNodes.Skip(2))
+            {
+                AnalyzeNodeSemantic((dynamic)childNode, row.Id);
+            }
+        }
+
+        private void AnalyzeNodeSemantic(SyntaxNode node, int parentId)
+        {
+            int id = 0;
+            var symbolInfo = _semanticModel.GetSymbolInfo(node);
+            if (symbolInfo.Symbol != null)
+            {
+                id = AnalyzeNode((dynamic)node, symbolInfo);
+            }
+
+            AnalyzeChildNodesSemantic(node, id);
+        }
+
+        private int AnalyzeNode(InvocationExpressionSyntax node, SymbolInfo symbolInfo)
         {
             var methodSymbol = (IMethodSymbol)symbolInfo.Symbol;
             var methodFullName = methodSymbol.ToString();
 
+            //todo '.'の数で判定する
             var names = methodFullName.Split(new [] { '.' });
             var length = names.Length;
             if (length == 1)
             {
                 // ローカルメソッドなので、終了する
-                return;
+                return 0;
             }
 
-            var methodName = names[length - 1] + " " + methodSymbol.ReturnType.ToString();
-            var parentTypeName = names[length - 2];
-            var namespaceName = (names.Length <= 2) ? null : names.Take(length - 2).Aggregate((a, b) => $"{a}.{b}");
-
-            var methodRows = _dataBase.SelectInfos<MethodDeclarationRow>(i => i.UnieuqName == methodName);
-            var parentTypeRows = _dataBase.SelectInfos<TypeDeclarationRow>(i => i.Name == parentTypeName);
-            var namespaceRow = (namespaceName == null) ? null : _dataBase.SelectInfo<NamespaceDeclarationRow>(i => i.Name == namespaceName);
-
-            if (!methodRows.Any() || !parentTypeRows.Any() || namespaceRow == null)
-            {
-                // 定義がなかったので、終了する
-                //todo namespaceは無い場合があるので、適切に対応する
-                return;
-            }
+            int definitionId = AnalyzeSymbol(methodSymbol.OriginalDefinition);
 
             try
             {
-                var parentTypeRow = parentTypeRows.Where(i => i.ParentId == namespaceRow.Id).Single();
-                var methodRow = methodRows.Where(i => i.ParentTypeId == parentTypeRow.Id).Single();
-
                 var row = new MethodInvocationRow
                 {
                     Id = _idGenerator.Generate(),
                     Name = node.ToString(),
-                    MethodDeclarationId = methodRow.Id
+                    MethodDeclarationId = definitionId
                 };
 
                 _dataBase.Insert<MethodInvocationRow>(row);
+
+                return row.Id;
             }
             catch (System.Exception e)
             {
                 //todo 未対応の処理で例外が起きたので、ログを残す
                 System.Console.WriteLine("Warning : " + e.ToString());
+
+                return 0;
             }
         }
 
-        private void AnalyzeNode(SyntaxNode node, SymbolInfo symbolInfo)
+        private int AnalyzeNode(IdentifierNameSyntax node, SymbolInfo symbolInfo)
+        {
+            var symbol = symbolInfo.Symbol;
+
+            switch (symbol.Kind)
+            {
+            case SymbolKind.Method:
+                return AnalyzeSymbol((IMethodSymbol)symbol);
+            }
+
+            return 0;
+        }
+
+        private int AnalyzeNode(SyntaxNode node, SymbolInfo symbolInfo)
         {
             //todo 未対応のノードなので無視する
+            return 0;
+        }
+
+        private int AnalyzeSymbol(IMethodSymbol symbol)
+        {
+            int parentId = AnalyzeSymbol(symbol.ReceiverType);
+
+            string uniqueName = symbol.Name + "(";
+
+            if (symbol.Parameters.Any())
+            {
+                uniqueName += symbol.Parameters.Select(p => p.ToString()).Aggregate((a, b) => $"{a}, {b}");
+            }
+
+            uniqueName += ") " + symbol.ReturnType.ToString();
+
+            MethodDeclarationRow.Qualifier qualifier = MethodDeclarationRow.Qualifier.None;
+            if (symbol.IsVirtual) { qualifier = MethodDeclarationRow.Qualifier.Virtual; }
+            else if (symbol.IsOverride) { qualifier = MethodDeclarationRow.Qualifier.Override; }
+            else if (symbol.IsStatic) { qualifier = MethodDeclarationRow.Qualifier.Static; }
+
+            return _declarationAnalyzer.AnalyzeMethod(symbol.Name, parentId, uniqueName, qualifier).Id;
+        }
+
+        private int AnalyzeSymbol(ITypeSymbol symbol)
+        {
+            int parentId = AnalyzeSymbol((dynamic)symbol.ContainingSymbol);
+            return _declarationAnalyzer.AnalyzeType(symbol.Name, parentId, symbol.TypeKind).Id;
+        }
+
+        private int AnalyzeSymbol(INamespaceSymbol symbol)
+        {
+            if (symbol.IsGlobalNamespace)
+            {
+                return 0;
+            }
+
+            return _declarationAnalyzer.AnalyzeNamespace(symbol.ToString()).Id;
         }
     }
 }

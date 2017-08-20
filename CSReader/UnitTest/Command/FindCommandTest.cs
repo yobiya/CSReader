@@ -62,7 +62,11 @@ Method.SuperClass.VirtualMethod";
 
             var result = command.Execute();
 
-            string expected = @"Method.SuperClass.PublicMethod";
+            string expected = 
+@"NoNamespace.AddValue
+Method.SuperClass.PublicMethod
+System.Console.WriteLine
+System.Int32.ToString";
 
             Assert.AreEqual(expected, result);
         }

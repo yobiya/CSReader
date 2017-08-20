@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Castle.Core.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -20,7 +21,7 @@ namespace CSReader.Command.Print
             var fieldTexts = fields.Select(f => ConvertValue(f, () => f.GetValue(info))).Where(v => v != null);
             valueList.AddRange(fieldTexts);
 
-            return valueList.Aggregate((text, value) => text + System.Environment.NewLine + System.Environment.NewLine + value);
+            return valueList.Aggregate((text, value) => text + Environment.NewLine + Environment.NewLine + value);
         }
 
         private static string ConvertValue(MemberInfo memberInfo, Func<object> getValue)
@@ -30,17 +31,17 @@ namespace CSReader.Command.Print
             var value = getValue();
             var array = value as string[];
 
-            if (array == null)
+            if (array.IsNullOrEmpty())
             {
-                return attribute.Name + System.Environment.NewLine + "  " + value.ToString();
+                return attribute.Name + Environment.NewLine + "  " + value.ToString();
             }
             else
             {
                 return
                     attribute.Name
-                    + System.Environment.NewLine
+                    + Environment.NewLine
                     + "  "
-                    + array.Aggregate((a, b) => a + System.Environment.NewLine + "  " + b);
+                    + array.Aggregate((a, b) => a + Environment.NewLine + "  " + b);
             }
         }
     }
