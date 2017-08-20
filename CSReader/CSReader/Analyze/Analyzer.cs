@@ -38,25 +38,14 @@ namespace CSReader.Analyze
             {
                 var rootNodes = project.Documents.Select(d => d.GetSyntaxRootAsync().Result).ToArray();
 
-                // 構文解析が終わってから、意味解析を行う
                 var compilation = project.GetCompilationAsync().Result;
                 foreach (var rootNode in rootNodes)
                 {
-                    AnalyzeDocumentSemantic(compilation, rootNode);
+                    var semanticModel = compilation.GetSemanticModel(rootNode.SyntaxTree);
+                    var semanticAnalyzer = new SemanticAnalyzer(_dataBase, semanticModel, _idGenerator);
+                    semanticAnalyzer.Analyze(rootNode);
                 }
             }
-        }
-
-        /// <summary>
-        /// ドキュメントを構文解析する
-        /// </summary>
-        /// <param name="compilation">コンパイル情報</param>
-        /// <param name="rootNode">ドキュメントのルートノード</param>
-        private void AnalyzeDocumentSemantic(Compilation compilation, SyntaxNode rootNode)
-        {
-            var semanticModel = compilation.GetSemanticModel(rootNode.SyntaxTree);
-            var semanticAnalyzer = new SemanticAnalyzer(_dataBase, semanticModel, rootNode, _idGenerator);
-            semanticAnalyzer.BuildMethodInvocation();
         }
     }
 }

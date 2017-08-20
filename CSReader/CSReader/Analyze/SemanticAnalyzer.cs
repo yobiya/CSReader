@@ -14,22 +14,20 @@ namespace CSReader.Analyze
     {
         private readonly DataBaseBase _dataBase;
         private readonly SemanticModel _semanticModel;
-        private readonly SyntaxNode _rootNode;
         private readonly UniqueIdGenerator _idGenerator;
         private readonly DeclarationAnalyzer _declarationAnalyzer;
 
-        public SemanticAnalyzer(DataBaseBase dataBase, SemanticModel semanticModel, SyntaxNode rootNode, UniqueIdGenerator idGenerator)
+        public SemanticAnalyzer(DataBaseBase dataBase, SemanticModel semanticModel, UniqueIdGenerator idGenerator)
         {
             _dataBase = dataBase;
             _semanticModel = semanticModel;
-            _rootNode = rootNode;
             _idGenerator = idGenerator;
             _declarationAnalyzer = new DeclarationAnalyzer(dataBase, idGenerator);
         }
 
-        public void BuildMethodInvocation()
+        public void Analyze(SyntaxNode rootNode)
         {
-            AnalyzeNodeSemantic((dynamic)_rootNode, 0);
+            AnalyzeNodeSemantic((dynamic)rootNode, 0);
         }
 
         private void AnalyzeChildNodesSemantic(SyntaxNode node, int parentId)
